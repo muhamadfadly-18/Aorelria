@@ -209,7 +209,7 @@ function positionMontageCards() {
 }
 
 function startMusic() {
-  music.volume = 1;
+  music.volume = 2;
   music.currentTime = music.currentTime || 0;
   music.play().catch(() => {
     // beginBtn.classList.remove("hidden");

@@ -209,10 +209,10 @@ function positionMontageCards() {
 }
 
 function startMusic() {
-  music.volume = 1;
+  music.volume = 0.55;
   music.currentTime = music.currentTime || 0;
   music.play().catch(() => {
-    // beginBtn.classList.remove("hidden");
+    beginBtn.classList.remove("hidden");
   });
 }
 
@@ -474,9 +474,9 @@ async function runCountdown() {
   startJourney();
 }
 
-// beginBtn.addEventListener("click", () => {
-//   startJourney();
-// });
+beginBtn.addEventListener("click", () => {
+  startJourney();
+});
 
 window.addEventListener("pointerdown", startMusic, { once: true });
 window.addEventListener("resize", positionMontageCards);

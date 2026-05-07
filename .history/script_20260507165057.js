@@ -209,13 +209,18 @@ function positionMontageCards() {
 }
 
 function startMusic() {
-  music.volume = 1;
-  music.currentTime = music.currentTime || 0;
+
+  music.volume = 3;
+
+  music.currentTime =
+    music.currentTime || 0;
+
   music.play().catch(() => {
+
     // beginBtn.classList.remove("hidden");
+
   });
 }
-
 function typeText(element, text) {
   if (!element) {
     return;
