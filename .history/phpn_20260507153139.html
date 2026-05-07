@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mancing Mania - Klik Ikannya!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sky: #87CEEB;
+            --water: #2196F3;
+            --sand: #F4A460;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #2c3e50;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+
+        #game-stage {
+            width: 800px;
+            height: 500px;
+            background: linear-gradient(to bottom, var(--sky) 0%, var(--sky) 60%, var(--water) 60%, var(--water) 100%);
+            position: relative;
+            border-radius: 20px;
+            border: 8px solid #fff;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Daratan Tempat Mancing */
+        .dock {
+            position: absolute;
+            bottom: 40%;
+            left: 0;
+            width: 150px;
+            height: 20px;
+            background: #795548;
+            border-radius: 0 5px 5px 0;
+        }
+
+        /* Karakter Orang Mancing */
+        .fisherman {
+            position: absolute;
+            bottom: 40%;
+            left: 50px;
+            width: 40px;
+            height: 60px;
+            background: #FFCCBC;
+            border-radius: 10px 10px 0 0;
+            z-index: 5;
+        }
+
+        .hat {
+            position: absolute;
+            top: -15px;
+            left: -5px;
+            width: 50px;
+            height: 15px;
+            background: #FFA000;
+            border-radius: 50px 50px 0 0;
+        }
+
+        .fishing-rod {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            width: 150px;
+            height: 4px;
+            background: #3e2723;
+            transform: rotate(-30deg);
+            transform-origin: left;
+            transition: 0.3s;
+        }
+
+        .line {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 2px;
+            height: 150px;
+            background: rgba(255,255,255,0.6);
+        }
+
+        /* Ikan yang muncul */
+        .fish {
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            background: #FF5722;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            z-index: 10;
+            animation: wiggle 0.5s infinite;
+        }
+
+        .fish::after { /* Ekor Ikan */
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 5px;
+            border-left: 15px solid #FF5722;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(15deg) scale(1.1); }
+        }
+
+        /* Modal Pop-up */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            border: 5px solid #2196F3;
+            animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes pop {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-img {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .close-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .stats {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-stage">
+        <div class="stats">Ikan Didapat: <span id="count">0</span></div>
+        <div class="dock"></div>
+        
+        <div class="fisherman">
+            <div class="hat"></div>
+            <div class="fishing-rod" id="rod">
+                <div class="line"></div>
+            </div>
+        </div>
+
+        <!-- Ikan yang akan dipancing -->
+        <div id="fish" class="fish"></div>
+    </div>
+
+    <!-- Pop-up -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <img src="" id="pop-img" class="modal-img">
+            <h2 id="pop-title">Mantap!</h2>
+            <p id="pop-text">Kamu dapat ikan baru!</p>
+            <button class="close-btn" onclick="closeModal()">Lanjut Mancing</button>
+        </div>
+    </div>
+
+    <script>
+        const rod = document.getElementById('rod');
+        const fish = document.getElementById('fish');
+        const modal = document.getElementById('modal');
+        const countSpan = document.getElementById('count');
+        
+        let fishCount = 0;
+        let isModalOpen = false;
+
+        // Data jenis ikan
+        const fishData = [
+            { title: "Ikan Mas Mewah", text: "Warnanya berkilau seperti emas!", img: "https://images.unsplash.com/photo-1524704654690-b56c05c78a00?w=400" },
+            { title: "Ikan Cupang Biru", text: "Kecil-kecil tapi galak!", img: "https://images.unsplash.com/photo-1534567059665-3f9d45869680?w=400" },
+            { title: "Ikan Badut (Nemo)", text: "Dia tersesat sampai ke pancinganmu!", img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400" },
+            { title: "Ikan Salmon Segar", text: "Kaya akan omega-3 nih!", img: "https://images.unsplash.com/photo-1594005374167-5fd89998b25f?w=400" }
+        ];
+
+        // Fungsi otomatis memancing setiap 2 detik
+        setInterval(() => {
+            if (!isModalOpen) {
+                catchFish();
+            }
+        }, 2000);
+
+        function catchFish() {
+            // Animasi joran melengkung
+            rod.style.transform = "rotate(-10deg)";
+            
+            setTimeout(() => {
+                // Posisi ikan muncul di ujung joran
+                fish.style.display = "block";
+                fish.style.left = "160px";
+                fish.style.bottom = "55%";
+                
+                rod.style.transform = "rotate(-30deg)";
+            }, 300);
+        }
+
+        // Klik ikan untuk memicu pop-up
+        fish.addEventListener('click', () => {
+            isModalOpen = true;
+            fish.style.display = "none";
+            fishCount++;
+            countSpan.innerText = fishCount;
+
+            // Pilih data ikan acak
+            const randomFish = fishData[Math.floor(Math.random() * fishData.length)];
+            
+            document.getElementById('pop-img').src = randomFish.img;
+            document.getElementById('pop-title').innerText = randomFish.title;
+            document.getElementById('pop-text').innerText = randomFish.text;
+            
+            modal.style.display = "flex";
+        });
+
+        function closeModal() {
+            modal.style.display = "none";
+            isModalOpen = false;
+        }
+    </script>
+</body>
+</html>

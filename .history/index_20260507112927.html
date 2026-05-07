@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Untuk Kamu ❤️</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      overflow:hidden;
+      font-family:'Poppins',sans-serif;
+      background:black;
+      color:white;
+    }
+
+    .hidden{
+      display:none !important;
+    }
+
+    /* =========================
+       LOADING SCREEN
+    ========================= */
+
+    .loading-screen{
+      position:fixed;
+      inset:0;
+
+      background:
+        linear-gradient(
+          135deg,
+          #0f0c29,
+          #302b63,
+          #24243e
+        );
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+
+      z-index:999999;
+
+      overflow:hidden;
+    }
+
+    .loading-screen::before{
+      content:"";
+      position:absolute;
+      inset:0;
+
+      background:
+        radial-gradient(white 1px, transparent 1px);
+
+      background-size:50px 50px;
+
+      opacity:0.2;
+
+      animation:starsMove 100s linear infinite;
+    }
+
+    @keyframes starsMove{
+      from{
+        transform:translateY(0);
+      }
+
+      to{
+        transform:translateY(-2000px);
+      }
+    }
+
+    .anime-loader{
+      text-align:center;
+      z-index:2;
+    }
+
+    .moon{
+      width:170px;
+      height:170px;
+
+      margin:auto;
+
+      border-radius:50%;
+
+      background:
+        radial-gradient(
+          circle,
+          #fff,
+          #ffd6f6
+        );
+
+      box-shadow:
+        0 0 50px white,
+        0 0 100px pink,
+        0 0 150px hotpink;
+
+      animation:moonFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes moonFloat{
+      0%{
+        transform:translateY(0);
+      }
+
+      50%{
+        transform:translateY(-20px);
+      }
+
+      100%{
+        transform:translateY(0);
+      }
+    }
+
+    .anime-loader h1{
+      margin-top:30px;
+
+      font-size:50px;
+
+      text-shadow:
+        0 0 20px pink,
+        0 0 40px white;
+    }
+
+    .loading-bar{
+      width:350px;
+      height:15px;
+
+      margin-top:30px;
+
+      border-radius:50px;
+
+      overflow:hidden;
+
+      background:
+        rgba(255,255,255,0.15);
+    }
+
+    .loading-fill{
+      width:0%;
+      height:100%;
+
+      border-radius:50px;
+
+      background:
+        linear-gradient(
+          90deg,
+          #ff4f9a,
+          #ffd6f6
+        );
+
+      box-shadow:
+        0 0 20px pink;
+
+      transition:0.3s;
+    }
+
+    /* =========================
+       WELCOME
+    ========================= */
+
+    .welcome-screen{
+      position:relative;
+
+      width:100%;
+      height:100vh;
+
+      overflow:hidden;
+
+      background:
+        linear-gradient(
+          rgba(0,0,0,0.5),
+          rgba(0,0,0,0.8)
+        ),
+
+        url('assets/images/cover.jpg')
+        center/cover no-repeat;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .stars,
+    .stars2{
+      position:absolute;
+      inset:0;
+    }
+
+    .stars{
+      background:
+        radial-gradient(white 1px, transparent 1px);
+
+      background-size:50px 50px;
+
+      animation:moveStars 80s linear infinite;
+
+      opacity:0.7;
+    }
+
+    .stars2{
+      background:
+        radial-gradient(pink 1px, transparent 1px);
+
+      background-size:100px 100px;
+
+      animation:moveStars2 120s linear infinite;
+
+      opacity:0.4;
+    }
+
+    @keyframes moveStars{
+      from{
+        transform:translateY(0);
+      }
+
+      to{
+        transform:translateY(-1000px);
+      }
+    }
+
+    @keyframes moveStars2{
+      from{
+        transform:translateX(0);
+      }
+
+      to{
+        transform:translateX(-1000px);
+      }
+    }
+
+    .bubbles{
+      position:absolute;
+      inset:0;
+      overflow:hidden;
+    }
+
+    .bubbles span{
+      position:absolute;
+
+      bottom:-100px;
+
+      border-radius:50%;
+
+      background:
+        rgba(255,255,255,0.15);
+
+      backdrop-filter:blur(4px);
+
+      animation:bubbleUp linear infinite;
+    }
+
+    .bubbles span:nth-child(1){
+      left:10%;
+      width:40px;
+      height:40px;
+      animation-duration:10s;
+    }
+
+    .bubbles span:nth-child(2){
+      left:25%;
+      width:20px;
+      height:20px;
+      animation-duration:7s;
+    }
+
+    .bubbles span:nth-child(3){
+      left:40%;
+      width:60px;
+      height:60px;
+      animation-duration:14s;
+    }
+
+    .bubbles span:nth-child(4){
+      left:60%;
+      width:35px;
+      height:35px;
+      animation-duration:11s;
+    }
+
+    .bubbles span:nth-child(5){
+      left:75%;
+      width:50px;
+      height:50px;
+      animation-duration:15s;
+    }
+
+    .bubbles span:nth-child(6){
+      left:90%;
+      width:25px;
+      height:25px;
+      animation-duration:8s;
+    }
+
+    @keyframes bubbleUp{
+      from{
+        transform:translateY(0);
+        opacity:0;
+      }
+
+      20%{
+        opacity:1;
+      }
+
+      to{
+        transform:translateY(-120vh);
+        opacity:0;
+      }
+    }
+
+    .overlay{
+      position:absolute;
+      inset:0;
+
+      background:
+        rgba(0,0,0,0.4);
+    }
+
+    .welcome-content{
+      position:relative;
+
+      z-index:10;
+
+      text-align:center;
+
+      padding:60px;
+
+      border-radius:35px;
+
+      background:
+        rgba(255,255,255,0.08);
+
+      backdrop-filter:blur(10px);
+
+      border:
+        1px solid rgba(255,255,255,0.2);
+
+      box-shadow:
+        0 0 40px rgba(255,192,203,0.3),
+        0 0 100px rgba(255,105,180,0.2);
+
+      animation:floatBox 5s ease-in-out infinite;
+    }
+
+    @keyframes floatBox{
+      0%{
+        transform:translateY(0);
+      }
+
+      50%{
+        transform:translateY(-10px);
+      }
+
+      100%{
+        transform:translateY(0);
+      }
+    }
+
+    .welcome-content h1{
+      font-size:70px;
+
+      margin-bottom:20px;
+
+      text-shadow:
+        0 0 20px pink,
+        0 0 40px white;
+
+      animation:glowTitle 2s infinite alternate;
+    }
+
+    @keyframes glowTitle{
+      from{
+        text-shadow:
+          0 0 20px pink;
+      }
+
+      to{
+        text-shadow:
+          0 0 20px white,
+          0 0 50px hotpink;
+      }
+    }
+
+    .welcome-content p{
+      font-size:24px;
+
+      margin-bottom:35px;
+    }
+
+    .welcome-content button{
+      padding:18px 45px;
+
+      border:none;
+      border-radius:50px;
+
+      font-size:18px;
+      font-weight:600;
+
+      cursor:pointer;
+
+      color:white;
+
+      background:
+        linear-gradient(
+          45deg,
+          #ff4f9a,
+          #ff85c2
+        );
+
+      box-shadow:
+        0 0 20px hotpink;
+
+      transition:0.4s;
+    }
+
+    .welcome-content button:hover{
+      transform:scale(1.08);
+
+      box-shadow:
+        0 0 50px hotpink;
+    }
+
+    /* =========================
+       GAME
+    ========================= */
+
+    .game-section{
+      position:fixed;
+      inset:0;
+
+      overflow:hidden;
+
+      background:
+        linear-gradient(
+          135deg,
+          #141e30,
+          #243b55
+        );
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+    }
+
+    .game-section h1{
+      font-size:55px;
+
+      margin-bottom:10px;
+
+      z-index:2;
+    }
+
+    .game-section p{
+      font-size:22px;
+
+      margin-bottom:20px;
+
+      z-index:2;
+    }
+
+    .score{
+      font-size:30px;
+
+      color:pink;
+
+      z-index:2;
+    }
+
+    .hearts-container{
+      position:absolute;
+      inset:0;
+    }
+
+    .heart{
+      position:absolute;
+
+      cursor:pointer;
+
+      animation:heartFloat linear forwards;
+
+      user-select:none;
+    }
+
+    .heart:hover{
+      transform:scale(1.2);
+    }
+
+    @keyframes heartFloat{
+      from{
+        transform:translateY(120vh);
+        opacity:0;
+      }
+
+      20%{
+        opacity:1;
+      }
+
+      to{
+        transform:translateY(-120vh);
+        opacity:0;
+      }
+    }
+
+    .game-success{
+      font-size:60px;
+
+      text-shadow:
+        0 0 20px pink,
+        0 0 40px white;
+    }
+
+    /* =========================
+       BOOK
+    ========================= */
+
+    .book-section{
+      position:relative;
+
+      width:100%;
+      height:100vh;
+
+      overflow:hidden;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+
+      background:
+        linear-gradient(
+          135deg,
+          #ffdde1,
+          #ee9ca7,
+          #fad0c4
+        );
+    }
+
+    .book{
+      position:relative;
+
+      width:450px;
+      height:600px;
+
+      perspective:4000px;
+    }
+
+    .page{
+      position:absolute;
+
+      width:100%;
+      height:100%;
+
+      border-radius:25px;
+
+      overflow:hidden;
+
+      background:
+        linear-gradient(
+          145deg,
+          #fff,
+          #ffeef5
+        );
+
+      color:#444;
+
+      transform-origin:left;
+
+      transition:1.4s;
+
+      cursor:pointer;
+
+      box-shadow:
+        0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    .page.flipped{
+      transform:rotateY(-180deg);
+    }
+
+    .page-content{
+      width:100%;
+      height:100%;
+
+      padding:30px;
+
+      text-align:center;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+    }
+
+    .page img{
+      width:100%;
+      height:260px;
+
+      object-fit:cover;
+
+      border-radius:20px;
+
+      margin-bottom:25px;
+
+      box-shadow:
+        0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .page h2{
+      font-size:32px;
+
+      margin-bottom:15px;
+
+      color:#ff4f9a;
+    }
+
+    .page p{
+      line-height:2;
+      font-size:17px;
+    }
+
+    .cover{
+      background:
+        linear-gradient(
+          135deg,
+          #ff5ea8,
+          #ff85c2
+        );
+
+      color:white;
+    }
+
+    .cover h1{
+      font-size:55px;
+
+      margin-bottom:20px;
+
+      text-shadow:
+        0 0 20px white,
+        0 0 40px pink;
+    }
+
+    .last-page{
+      background:
+        linear-gradient(
+          135deg,
+          #fff0f6,
+          #ffe4ec
+        );
+    }
+
+    .last-page h1{
+      color:#ff4f9a;
+
+      margin-top:10px;
+    }
+
+    #closeBook{
+      margin-top:30px;
+
+      padding:15px 35px;
+
+      border:none;
+      border-radius:50px;
+
+      cursor:pointer;
+
+      color:white;
+
+      background:
+        linear-gradient(
+          45deg,
+          #ff4f9a,
+          #ff85c2
+        );
+
+      box-shadow:
+        0 10px 30px rgba(255,105,180,0.4);
+
+      transition:0.4s;
+    }
+
+    #closeBook:hover{
+      transform:scale(1.08);
+    }
+
+    /* =========================
+       FINAL
+    ========================= */
+
+    .final-message{
+      text-align:center;
+    }
+
+    .final-message h1{
+      font-size:65px;
+
+      margin-bottom:20px;
+
+      text-shadow:
+        0 0 20px white,
+        0 0 50px pink;
+    }
+
+    .final-message p{
+      font-size:28px;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media(max-width:768px){
+
+      .welcome-content{
+        width:90%;
+        padding:40px 25px;
+      }
+
+      .welcome-content h1{
+        font-size:42px;
+      }
+
+      .welcome-content p{
+        font-size:18px;
+      }
+
+      .book{
+        width:320px;
+        height:500px;
+      }
+
+      .page img{
+        height:200px;
+      }
+
+      .page h2{
+        font-size:24px;
+      }
+
+      .page p{
+        font-size:15px;
+      }
+
+      .final-message h1{
+        font-size:40px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- MUSIC -->
+  <audio id="bgMusic" loop>
+    <source src="assets/music/song.mp3" type="audio/mp3">
+  </audio>
+
+  <!-- LOADING -->
+  <div class="loading-screen" id="loadingScreen">
+
+    <div class="anime-loader">
+
+      <div class="moon"></div>
+
+      <h1>Loading Love...</h1>
+
+      <div class="loading-bar">
+        <div class="loading-fill" id="loadingFill"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- WELCOME -->
+  <section class="welcome-screen" id="welcome">
+
+    <div class="stars"></div>
+    <div class="stars2"></div>
+
+    <div class="bubbles">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="welcome-content">
+
+      <h1>Selamat Datang Cantik ❤️</h1>
+
+      <p>
+        Aku punya sesuatu yang spesial buat kamu ✨
+      </p>
+
+      <button id="openBtn">
+        Buka Sekarang 💖
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- GAME -->
+  <section class="game-section hidden" id="gameSection">
+
+    <h1>Tembak Semua Hati ❤️</h1>
+
+    <p>
+      Kumpulkan 10 hati untuk membuka hadiah ✨
+    </p>
+
+    <div class="score">
+      Score:
+      <span id="score">0</span>/10
+    </div>
+
+    <div class="hearts-container" id="heartsContainer"></div>
+
+  </section>
+
+  <!-- BOOK -->
+  <section class="book-section hidden" id="bookSection">
+
+    <div class="book">
+
+      <!-- COVER -->
+      <div class="page cover">
+
+        <div class="page-content">
+
+          <h1>Untuk Kamu ❤️</h1>
+
+          <p>
+            Klik halaman untuk membuka ✨
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- PAGE 1 -->
+      <div class="page">
+
+        <div class="page-content">
+
+          <img src="assets/images/page1.jpg">
+
+          <h2>Hai Cantik 🌸</h2>
+
+          <p>
+            Terima kasih sudah hadir di hidup aku.
+            Semua hari terasa lebih indah sejak kenal kamu.
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- PAGE 2 -->
+      <div class="page">
+
+        <div class="page-content">
+
+          <img src="assets/images/page2.jpg">
+
+          <h2>Senyum Kamu 😊</h2>
+
+          <p>
+            Senyum kamu selalu bikin hati tenang.
+            Aku suka semua tentang kamu.
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- PAGE 3 -->
+      <div class="page">
+
+        <div class="page-content">
+
+          <img src="assets/images/page3.jpg">
+
+          <h2>Terima Kasih ❤️</h2>
+
+          <p>
+            Terima kasih karena sudah jadi seseorang
+            yang spesial di hidup aku.
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- LAST PAGE -->
+      <div class="page last-page">
+
+        <div class="page-content">
+
+          <img src="assets/images/last.jpg">
+
+          <h1>I Love You ❤️</h1>
+
+          <p>
+            Semoga kita selalu bersama sampai kapanpun ✨
+          </p>
+
+          <button id="closeBook">
+            Tutup Buku 📖
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- FINAL -->
+    <div class="final-message hidden" id="finalMessage">
+
+      <h1>
+        Terima Kasih Sudah Membuka Buku Ini ❤️
+      </h1>
+
+      <p>
+        Kamu adalah halaman terindah dalam hidup aku ✨
+      </p>
+
+    </div>
+
+  </section>
+
+  <script>
+
+    const loadingScreen =
+      document.getElementById("loadingScreen");
+
+    const loadingFill =
+      document.getElementById("loadingFill");
+
+    const openBtn =
+      document.getElementById("openBtn");
+
+    const welcome =
+      document.getElementById("welcome");
+
+    const gameSection =
+      document.getElementById("gameSection");
+
+    const heartsContainer =
+      document.getElementById("heartsContainer");
+
+    const bookSection =
+      document.getElementById("bookSection");
+
+    const pages =
+      document.querySelectorAll(".page");
+
+    const music =
+      document.getElementById("bgMusic");
+
+    const closeBook =
+      document.getElementById("closeBook");
+
+    const finalMessage =
+      document.getElementById("finalMessage");
+
+    const scoreText =
+      document.getElementById("score");
+
+    let score = 0;
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    let load = 0;
+
+    const loadingInterval =
+      setInterval(() => {
+
+      load++;
+
+      loadingFill.style.width =
+        load + "%";
+
+      if(load >= 100){
+
+        clearInterval(loadingInterval);
+
+        setTimeout(() => {
+
+          loadingScreen.style.display =
+            "none";
+
+        }, 500);
+
+      }
+
+    }, 30);
+
+    /* =========================
+       OPEN GAME
+    ========================= */
+
+    openBtn.addEventListener("click", () => {
+
+      welcome.classList.add("hidden");
+
+      gameSection.classList.remove("hidden");
+
+      music.play();
+
+      startGame();
+
+    });
+
+    /* =========================
+       GAME
+    ========================= */
+
+    function startGame(){
+
+      const createHeart = () => {
+
+        const heart =
+          document.createElement("div");
+
+        heart.classList.add("heart");
+
+        heart.innerHTML = "💖";
+
+        heart.style.left =
+          Math.random() * 100 + "vw";
+
+        heart.style.fontSize =
+          Math.random() * 30 + 30 + "px";
+
+        heart.style.animationDuration =
+          Math.random() * 3 + 4 + "s";
+
+        heartsContainer.appendChild(heart);
+
+        heart.addEventListener("click", () => {
+
+          heart.remove();
+
+          score++;
+
+          scoreText.innerText = score;
+
+          if(score >= 10){
+
+            gameWin();
+
+          }
+
+        });
+
+        setTimeout(() => {
+
+          heart.remove();
+
+        }, 7000);
+
+      };
+
+      setInterval(createHeart, 700);
+
+    }
+
+    /* =========================
+       WIN GAME
+    ========================= */
+
+    function gameWin(){
+
+      gameSection.innerHTML = `
+        <div class="game-success">
+          Kamu Berhasil Membuka Hadiah ❤️
+        </div>
+      `;
+
+      setTimeout(() => {
+
+        gameSection.classList.add("hidden");
+
+        bookSection.classList.remove("hidden");
+
+      }, 2500);
+
+    }
+
+    /* =========================
+       BOOK
+    ========================= */
+
+    pages.forEach((page, index) => {
+
+      page.style.zIndex =
+        pages.length - index;
+
+      page.addEventListener("click", () => {
+
+        page.classList.toggle("flipped");
+
+        if(page.classList.contains("flipped")){
+
+          page.style.zIndex = index;
+
+        }else{
+
+          page.style.zIndex =
+            pages.length - index;
+
+        }
+
+      });
+
+    });
+
+    /* =========================
+       CLOSE BOOK
+    ========================= */
+
+    closeBook.addEventListener("click", () => {
+
+      document.querySelector(".book")
+        .style.display = "none";
+
+      finalMessage.classList.remove("hidden");
+
+    });
+
+  </script>
+
+</body>
+</html>

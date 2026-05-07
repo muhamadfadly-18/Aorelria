@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fishing Animation</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      overflow:hidden;
+      height:100vh;
+      background:
+      linear-gradient(to bottom,
+      #7fd6ff 0%,
+      #b8ecff 35%,
+      #39a9ff 35%,
+      #0d5ea8 100%);
+      font-family:Arial, sans-serif;
+    }
+
+    /* MATAHARI */
+    .sun{
+      position:absolute;
+      width:120px;
+      height:120px;
+      background:#ffd84d;
+      border-radius:50%;
+      top:40px;
+      right:60px;
+      box-shadow:0 0 80px #ffd84d;
+    }
+
+    /* AWAN */
+    .cloud{
+      position:absolute;
+      width:170px;
+      height:60px;
+      background:white;
+      border-radius:50px;
+      opacity:.9;
+      animation:cloudMove linear infinite;
+    }
+
+    .cloud::before,
+    .cloud::after{
+      content:"";
+      position:absolute;
+      background:white;
+      border-radius:50%;
+    }
+
+    .cloud::before{
+      width:70px;
+      height:70px;
+      top:-30px;
+      left:20px;
+    }
+
+    .cloud::after{
+      width:90px;
+      height:90px;
+      top:-45px;
+      right:20px;
+    }
+
+    .c1{
+      top:80px;
+      left:-200px;
+      animation-duration:25s;
+    }
+
+    .c2{
+      top:150px;
+      left:-300px;
+      transform:scale(.8);
+      animation-duration:35s;
+    }
+
+    @keyframes cloudMove{
+      from{
+        transform:translateX(0);
+      }
+      to{
+        transform:translateX(150vw);
+      }
+    }
+
+    /* TANAH */
+    .land{
+      position:absolute;
+      width:100%;
+      height:180px;
+      background:#46b946;
+      top:35%;
+      border-radius:100px 100px 0 0;
+      box-shadow:0 -10px 40px rgba(0,0,0,.2) inset;
+    }
+
+    /* AIR */
+    .water{
+      position:absolute;
+      bottom:0;
+      width:100%;
+      height:45%;
+      background:
+      linear-gradient(
+        rgba(255,255,255,.08) 2px,
+        transparent 2px
+      ),
+      linear-gradient(to bottom,#2da7ff,#0057a8);
+      background-size:100% 18px;
+      overflow:hidden;
+    }
+
+    /* GELOMBANG */
+    .wave{
+      position:absolute;
+      width:300%;
+      height:120px;
+      background:rgba(255,255,255,.12);
+      top:-50px;
+      left:-100%;
+      border-radius:40%;
+      animation:wave 8s linear infinite;
+    }
+
+    @keyframes wave{
+      from{
+        transform:translateX(0);
+      }
+      to{
+        transform:translateX(300px);
+      }
+    }
+
+    /* ORANG */
+    .person{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      top:180px;
+      z-index:10;
+    }
+
+    .head{
+      width:55px;
+      height:55px;
+      background:#ffd1a4;
+      border-radius:50%;
+      margin:auto;
+      position:relative;
+      z-index:2;
+    }
+
+    .hair{
+      position:absolute;
+      width:60px;
+      height:35px;
+      background:#222;
+      border-radius:40px 40px 10px 10px;
+      top:-5px;
+      left:-3px;
+    }
+
+    .body{
+      width:90px;
+      height:110px;
+      background:#ff5252;
+      border-radius:30px;
+      margin:auto;
+      margin-top:-5px;
+      position:relative;
+    }
+
+    .arm-left,
+    .arm-right{
+      position:absolute;
+      width:75px;
+      height:16px;
+      background:#ffd1a4;
+      border-radius:20px;
+      top:25px;
+    }
+
+    .arm-left{
+      left:-55px;
+      transform:rotate(30deg);
+    }
+
+    .arm-right{
+      right:-60px;
+      transform:rotate(-20deg);
+    }
+
+    .leg-left,
+    .leg-right{
+      position:absolute;
+      width:18px;
+      height:90px;
+      background:#222;
+      border-radius:20px;
+      top:100px;
+    }
+
+    .leg-left{
+      left:20px;
+      transform:rotate(8deg);
+    }
+
+    .leg-right{
+      right:20px;
+      transform:rotate(-8deg);
+    }
+
+    /* PANCING */
+    .rod{
+      position:absolute;
+      width:220px;
+      height:7px;
+      background:#6b3f18;
+      top:250px;
+      left:calc(50% + 20px);
+      transform:rotate(25deg);
+      transform-origin:left center;
+      border-radius:20px;
+      z-index:5;
+    }
+
+    .line{
+      position:absolute;
+      width:2px;
+      height:220px;
+      background:white;
+      top:290px;
+      left:calc(50% + 210px);
+      z-index:5;
+    }
+
+    .hook{
+      position:absolute;
+      width:18px;
+      height:18px;
+      border:4px solid silver;
+      border-top:none;
+      border-left:none;
+      border-radius:0 0 50% 50%;
+      top:500px;
+      left:calc(50% + 202px);
+      transform:rotate(40deg);
+      z-index:5;
+    }
+
+    /* IKAN */
+    .fish{
+      position:absolute;
+      width:100px;
+      height:50px;
+      border-radius:50px;
+      cursor:pointer;
+      animation:swim 6s linear forwards;
+      box-shadow:0 10px 20px rgba(0,0,0,.2);
+      transition:.2s;
+    }
+
+    .fish:hover{
+      transform:scale(1.1);
+    }
+
+    .fish::before{
+      content:"";
+      position:absolute;
+      right:-22px;
+      top:10px;
+      border-left:25px solid currentColor;
+      border-top:15px solid transparent;
+      border-bottom:15px solid transparent;
+    }
+
+    .fish::after{
+      content:"";
+      position:absolute;
+      width:9px;
+      height:9px;
+      background:#111;
+      border-radius:50%;
+      left:14px;
+      top:15px;
+    }
+
+    @keyframes swim{
+      from{
+        transform:translateX(120vw);
+      }
+      to{
+        transform:translateX(-250px);
+      }
+    }
+
+    /* POPUP */
+    .popup{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity:0;
+      pointer-events:none;
+      transition:.3s;
+      z-index:999;
+    }
+
+    .popup.show{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .popup-box{
+      width:360px;
+      background:white;
+      padding:35px;
+      border-radius:30px;
+      text-align:center;
+      animation:pop .3s ease;
+      box-shadow:0 20px 40px rgba(0,0,0,.25);
+    }
+
+    @keyframes pop{
+      from{
+        transform:scale(.5);
+      }
+      to{
+        transform:scale(1);
+      }
+    }
+
+    .popup-box h1{
+      font-size:42px;
+      margin-bottom:10px;
+      color:#ff9800;
+    }
+
+    .popup-box p{
+      font-size:20px;
+      color:#444;
+      margin-bottom:25px;
+    }
+
+    .popup-box button{
+      padding:14px 35px;
+      border:none;
+      border-radius:20px;
+      background:#1f8fff;
+      color:white;
+      font-size:18px;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .popup-box button:hover{
+      transform:scale(1.05);
+    }
+
+    /* IKAN KENA PANCING */
+    .caught{
+      animation:catchFish .8s ease forwards !important;
+    }
+
+    @keyframes catchFish{
+      to{
+        transform:
+        translate(
+        calc(50vw - 200px),
+        -250px
+        )
+        scale(.3)
+        rotate(720deg);
+        opacity:0;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="sun"></div>
+
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+
+  <div class="land"></div>
+
+  <!-- ORANG -->
+  <div class="person">
+    <div class="head">
+      <div class="hair"></div>
+    </div>
+
+    <div class="body">
+      <div class="arm-left"></div>
+      <div class="arm-right"></div>
+
+      <div class="leg-left"></div>
+      <div class="leg-right"></div>
+    </div>
+  </div>
+
+  <!-- PANCING -->
+  <div class="rod"></div>
+  <div class="line"></div>
+  <div class="hook"></div>
+
+  <!-- AIR -->
+  <div class="water" id="water">
+    <div class="wave"></div>
+  </div>
+
+  <!-- POPUP -->
+  <div class="popup" id="popup">
+    <div class="popup-box">
+      <h1>🐟</h1>
+      <p>Ikan berhasil didapat!</p>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    const water = document.getElementById("water");
+    const popup = document.getElementById("popup");
+
+    const fishColors = [
+      "#ff9800",
+      "#ff4d6d",
+      "#ffd93d",
+      "#8e44ad",
+      "#00c2ff",
+      "#2ecc71"
+    ];
+
+    function createFish(){
+
+      const fish = document.createElement("div");
+      fish.classList.add("fish");
+
+      // warna random
+      const color =
+      fishColors[Math.floor(Math.random()*fishColors.length)];
+
+      fish.style.background = color;
+      fish.style.color = color;
+
+      // posisi random
+      fish.style.top =
+      (Math.random()*220 + 70) + "px";
+
+      water.appendChild(fish);
+
+      // otomatis kena pancing 2 detik
+      setTimeout(()=>{
+
+        fish.classList.add("caught");
+
+        popup.classList.add("show");
+
+        setTimeout(()=>{
+          fish.remove();
+        },800);
+
+      },2000);
+    }
+
+    // spawn ikan terus
+    setInterval(createFish,2500);
+
+    createFish();
+
+    function closePopup(){
+      popup.classList.remove("show");
+    }
+
+  </script>
+
+</body>
+</html>

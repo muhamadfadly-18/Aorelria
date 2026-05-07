@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special for You | Forever ❤️</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="assets/music/song.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- Welcome Screen -->
+    <section class="welcome-screen" id="welcome">
+        <div class="particles"></div>
+        <div class="overlay"></div>
+        
+        <div class="welcome-content">
+            <div class="heart-icon">❤️</div>
+            <h1>Halo Cantik ✨</h1>
+            <p>Ada sebuah pesan kecil yang ingin aku sampaikan...</p>
+            <button id="openBtn">Buka Pesan Ini 💖</button>
+        </div>
+    </section>
+
+    <!-- Main Content (Book) -->
+    <section class="book-section hidden" id="bookSection">
+        <div class="book-container">
+            <div class="book">
+                <!-- Cover -->
+                <div class="page cover" onclick="flipPage(this)">
+                    <div class="page-content">
+                        <div class="seal">🌸</div>
+                        <h1>Untuk Kamu ❤️</h1>
+                        <p>Klik untuk membuka memori kita</p>
+                    </div>
+                </div>
+
+                <!-- Page 1 -->
+                <div class="page" onclick="flipPage(this)">
+                    <div class="page-content">
+                        <img src="assets/images/page1.jpg" alt="Moment 1">
+                        <h2>Teruntuk Kamu,</h2>
+                        <p>Kehadiranmu mengubah duniaku menjadi lebih berwarna. Terima kasih telah memilih untuk tetap tinggal.</p>
+                    </div>
+                </div>
+
+                <!-- Page 2 -->
+                <div class="page" onclick="flipPage(this)">
+                    <div class="page-content">
+                        <img src="assets/images/page2.jpg" alt="Moment 2">
+                        <h2>Senyum Terindah</h2>
+                        <p>Bagiku, duniamu adalah tempat ternyaman. Dan senyummu adalah alasan aku tetap bahagia setiap hari.</p>
+                    </div>
+                </div>
+
+                <!-- Final Page -->
+                <div class="page last-page">
+                    <div class="page-content">
+                        <div class="grand-final">
+                            <h1>I Love You ❤️</h1>
+                            <p>Mari kita tulis lebih banyak cerita indah bersama selamanya.</p>
+                            <button id="closeBook">Selesaikan 📖</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="final-message hidden" id="finalMessage">
+            <div class="glass-card">
+                <h1>Halaman Terakhir ✨</h1>
+                <p>Tapi kisah kita baru saja dimulai...</p>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

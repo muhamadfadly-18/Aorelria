@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Untuk Kamu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Marhey:wght@400;700&family=Nunito:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <audio id="bgMusic" loop autoplay preload="auto">
+      <source src="assets/music/Kiss the Rain.mp3" type="audio/mp3" />
+    </audio>
+
+    <section class="intro-screen" id="introScreen">
+      <div class="intro-screen__rain" aria-hidden="true" id="rainLayer"></div>
+      <div class="intro-screen__mist"></div>
+      <div class="intro-screen__content">
+        <div class="intro-screen__countdown" id="countdownText">5</div>
+        <button
+          class="primary-button intro-screen__button hidden"
+          id="beginBtn"
+          type="button"
+        >
+          Mulai Cerita
+        </button>
+      </div>
+    </section>
+
+    <div class="loading-screen hidden" id="loadingScreen">
+      <div class="loading-screen__stars"></div>
+      <div class="loading-screen__content">
+        <div class="loading-screen__moon"></div>
+        <p class="loading-screen__eyebrow" id="loadingLabel">
+          moonlight loading
+        </p>
+        <h1 class="loading-screen__title" id="loadingTitle">
+          Loading Love Story
+        </h1>
+        <div class="loading-screen__bar">
+          <div class="loading-screen__fill" id="loadingFill"></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="montage-section hidden" id="montageSection">
+      <div class="montage-section__bg"></div>
+      <div
+        class="montage-section__rain"
+        aria-hidden="true"
+        id="montageRain"
+      ></div>
+      <div class="montage-shell">
+        <div class="montage-orb montage-orb--left"></div>
+        <div class="montage-orb montage-orb--right"></div>
+        <div class="montage-track" id="montageTrack"></div>
+      </div>
+    </section>
+
+    <section class="game-section hidden" id="gameSection">
+      <div class="game-section__bg"></div>
+      <div class="game-panel">
+        <p class="game-panel__eyebrow">mini game cinta</p>
+        <h2 class="game-panel__title">Tembak Hati Dengan Lembut</h2>
+        <p class="game-panel__text">
+          Kumpulkan 10 hati. Panel ini dibuat kecil di atas supaya panggungnya
+          tetap bersih.
+        </p>
+        <div class="game-panel__score">Score <span id="score">0</span>/10</div>
+      </div>
+
+      <div class="archer-stage">
+        <div class="hearts-container" id="heartsContainer"></div>
+        <div class="arrow-layer" id="arrowLayer"></div>
+        <div class="archer-bow" aria-hidden="true">
+          <div class="archer-bow__glow"></div>
+          <div class="archer-bow__body"></div>
+          <div class="archer-bow__string"></div>
+          <div class="archer-bow__arrow"></div>
+        </div>
+      </div>
+    </section>
+
+  <section class="hidden" id="bookSection">
+      <div class="memory-section__glow"></div>
+      <div class="memory-section__icons" aria-hidden="true">
+        <span>✦</span>
+        <span>♡</span>
+        <span>☾</span>
+        <span>✿</span>
+        <span>♫</span>
+        <span>✧</span>
+        <span>♡</span>
+        <span>☁</span>
+      </div>
+
+      <div class="memory-layout">
+        <header class="memory-hero">
+          <h2 class="memory-hero__title">Kumpulan Kenangan Kecil Buat Kamu</h2>
+
+          <div class="memory-hero__progress">
+            Kenangan terbuka <span id="memoryCount">0</span>/6
+          </div>
+        </header>
+
+        <div class="memory-stage">
+          <!-- DREAM WORLD -->
+          <div class="dream-world" id="dreamWorld">
+            <div class="dream-world__moon"></div>
+            <div class="dream-world__mist"></div>
+
+            <!-- TREE -->
+            <div class="magic-tree">
+              <div class="tree-trunk"></div>
+
+              <div class="tree-leaves"></div>
+
+              <!-- FRUITS -->
+
+              <button class="memory-fruit fruit-1" data-memory="0">🍎</button>
+
+              <button class="memory-fruit fruit-2" data-memory="1">🍎</button>
+
+              <button class="memory-fruit fruit-3" data-memory="2">🍎</button>
+
+              <button class="memory-fruit fruit-4" data-memory="3">🍎</button>
+
+              <button class="memory-fruit fruit-5" data-memory="4">🍎</button>
+
+              <button class="memory-fruit fruit-6" data-memory="5">🍎</button>
+            </div>
+          </div>
+
+          <!-- POPUP -->
+
+          <div class="memory-popup hidden" id="memoryPopup">
+            <div class="memory-popup__overlay"></div>
+
+            <div class="memory-popup__content">
+              <button class="memory-popup__close" id="closePopup">✕</button>
+
+              <img class="memory-popup__image" id="popupImage" src="" />
+
+              <h2 class="memory-popup__title" id="popupTitle"></h2>
+
+              <p class="memory-popup__text" id="popupText"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="memory-finale">
+          <button class="primary-button hidden" id="closeBook" type="button">
+            Lihat Ending
+          </button>
+        </div>
+      </div>
+
+      <div class="final-message hidden" id="finalMessage">
+        <p class="final-message__eyebrow">the softest ending</p>
+        <h1>Semua Kenangan Ini Tetap Punya Tempat Yang Cantik</h1>
+        <p>
+          Dan kalau suatu hari kamu membaca semuanya lagi, semoga kamu bisa
+          merasakan betapa hangatnya cara kamu pernah tinggal di hati seseorang.
+        </p>
+      </div>
+    </section>
+
+    <script src="script.js"></script>
+  </body>
+</html>

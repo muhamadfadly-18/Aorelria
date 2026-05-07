@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Untuk Kamu ❤️</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Musik -->
+    <audio id="bgMusic" loop>
+      <source src="assets/music/song.mp3" type="audio/mp3" />
+    </audio>
+
+    <section class="welcome-screen" id="welcome">
+      <!-- Background Animation -->
+      <div class="stars"></div>
+      <div class="stars2"></div>
+      <div class="bubbles"></div>
+
+      <div class="overlay"></div>
+
+      <div class="welcome-content">
+        <h1>Selamat Datang Cantik ❤️</h1>
+
+        <p>Aku punya sesuatu yang spesial buat kamu ✨</p>
+
+        <button id="openBtn">Buka Sekarang 💖</button>
+      </div>
+    </section>
+
+    <!-- Buku -->
+    <section class="book-section hidden" id="bookSection">
+      <div class="book">
+        <!-- Cover -->
+        <div class="page cover">
+          <div class="page-content">
+            <h1>Untuk Kamu ❤️</h1>
+            <p>Klik halaman untuk membuka</p>
+          </div>
+        </div>
+
+        <!-- Page 1 -->
+        <div class="page">
+          <div class="page-content">
+            <img src="assets/images/page1.jpg" alt="" />
+            <h2>Hai Cantik 🌸</h2>
+
+            <p>
+              Terima kasih sudah hadir di hidup aku. Semua hari terasa lebih
+              indah sejak kenal kamu.
+            </p>
+          </div>
+        </div>
+
+        <!-- Page 2 -->
+        <div class="page">
+          <div class="page-content">
+            <img src="assets/images/page2.jpg" alt="" />
+            <h2>Senyum Kamu 😊</h2>
+
+            <p>
+              Senyum kamu selalu bikin hati tenang. Aku suka semua tentang kamu.
+            </p>
+          </div>
+        </div>
+
+        <!-- Page 3 -->
+        <div class="page">
+          <div class="page-content">
+            <img src="assets/images/page3.jpg" alt="" />
+            <h2>Terima Kasih ❤️</h2>
+
+            <p>
+              Terima kasih karena sudah jadi seseorang yang spesial di hidup
+              aku.
+            </p>
+          </div>
+        </div>
+
+        <!-- Last Page -->
+        <div class="page last-page">
+          <div class="page-content">
+            <img src="assets/images/last.jpg" alt="" />
+
+            <h1>I Love You ❤️</h1>
+
+            <p>Semoga kita selalu bersama sampai kapanpun ✨</p>
+
+            <button id="closeBook">Tutup Buku 📖</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pesan akhir -->
+      <div class="final-message hidden" id="finalMessage">
+        <h1>Terima Kasih Sudah Membuka Buku Ini ❤️</h1>
+
+        <p>Kamu adalah halaman terindah dalam hidup aku ✨</p>
+      </div>
+    </section>
+
+    <script src="script.js"></script>
+  </body>
+</html>

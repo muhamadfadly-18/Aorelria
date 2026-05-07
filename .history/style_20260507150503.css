@@ -1,0 +1,687 @@
+```css
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Marhey:wght@400;700&family=Nunito:wght@400;600;700&display=swap");
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  overflow:hidden;
+  font-family:"Nunito",sans-serif;
+  background:#08142c;
+  color:white;
+}
+
+.hidden{
+  display:none !important;
+}
+
+/* =========================
+INTRO
+========================= */
+
+.intro-screen,
+.loading-screen,
+.montage-section,
+.game-section,
+.tree-section{
+  position:fixed;
+  inset:0;
+}
+
+.intro-screen{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+
+  background:
+  linear-gradient(
+    180deg,
+    #07101f,
+    #13254f
+  );
+}
+
+.intro-screen__rain{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+}
+
+.rain-drop{
+  position:absolute;
+  top:-20vh;
+
+  width:2px;
+  height:15vh;
+
+  background:
+  linear-gradient(
+    transparent,
+    rgba(255,255,255,.8)
+  );
+
+  animation:rainFall linear infinite;
+}
+
+.intro-screen__content{
+  position:relative;
+  z-index:2;
+  text-align:center;
+}
+
+.intro-screen__countdown{
+  font-size:9rem;
+  font-family:"Cormorant Garamond",serif;
+}
+
+.primary-button{
+  border:none;
+  padding:15px 35px;
+  border-radius:999px;
+  cursor:pointer;
+
+  background:
+  linear-gradient(
+    135deg,
+    #ff77b7,
+    #ffb7d7
+  );
+
+  color:white;
+
+  font-size:1rem;
+}
+
+/* =========================
+LOADING
+========================= */
+
+.loading-screen{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  background:
+  linear-gradient(
+    180deg,
+    #081020,
+    #1c2f5d
+  );
+}
+
+.loading-screen__content{
+  width:min(90vw,450px);
+
+  padding:40px;
+
+  border-radius:30px;
+
+  background:rgba(255,255,255,.08);
+
+  backdrop-filter:blur(14px);
+
+  text-align:center;
+}
+
+.loading-screen__moon{
+  width:120px;
+  height:120px;
+
+  margin:auto;
+  margin-bottom:20px;
+
+  border-radius:50%;
+
+  background:
+  radial-gradient(
+    circle,
+    white,
+    #ffc4df
+  );
+
+  box-shadow:
+  0 0 40px rgba(255,255,255,.5);
+}
+
+.loading-screen__title{
+  font-size:2rem;
+  font-family:"Marhey",cursive;
+}
+
+.loading-screen__bar{
+  width:100%;
+  height:12px;
+
+  margin-top:25px;
+
+  border-radius:999px;
+
+  overflow:hidden;
+
+  background:rgba(255,255,255,.15);
+}
+
+.loading-screen__fill{
+  width:0;
+  height:100%;
+
+  background:
+  linear-gradient(
+    90deg,
+    #ff84c0,
+    #9adfff
+  );
+}
+
+/* =========================
+MONTAGE
+========================= */
+
+.montage-section{
+  overflow:hidden;
+
+  background:
+  linear-gradient(
+    180deg,
+    #081225,
+    #182f60
+  );
+}
+
+.montage-shell{
+  width:100%;
+  height:100%;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  perspective:1400px;
+}
+
+.montage-track{
+  position:relative;
+
+  width:650px;
+  height:650px;
+
+  transform-style:preserve-3d;
+
+  animation:rotateGlobe 35s linear infinite;
+}
+
+.montage-card{
+  position:absolute;
+
+  width:120px;
+  height:120px;
+
+  overflow:hidden;
+
+  border-radius:18px;
+
+  border:2px solid rgba(255,255,255,.15);
+
+  background:rgba(255,255,255,.08);
+}
+
+.montage-card img,
+.montage-card video{
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+}
+
+/* =========================
+GAME
+========================= */
+
+.game-section{
+  overflow:hidden;
+
+  background:
+  linear-gradient(
+    180deg,
+    #081025,
+    #162d5b
+  );
+}
+
+.game-panel{
+  position:absolute;
+
+  top:20px;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  width:min(90vw,400px);
+
+  padding:18px;
+
+  border-radius:24px;
+
+  text-align:center;
+
+  background:rgba(255,255,255,.08);
+
+  backdrop-filter:blur(10px);
+}
+
+.game-panel__title{
+  font-family:"Marhey",cursive;
+  font-size:2rem;
+}
+
+.archer-stage,
+.hearts-container,
+.arrow-layer{
+  position:absolute;
+  inset:0;
+}
+
+.heart{
+  position:absolute;
+
+  width:70px;
+  height:70px;
+
+  border:none;
+  background:none;
+
+  cursor:pointer;
+
+  animation:heartRise linear forwards;
+}
+
+.heart__label{
+  font-size:3rem;
+}
+
+.archer-bow{
+  position:absolute;
+
+  bottom:20px;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  width:140px;
+  height:140px;
+
+  border:5px solid #ffd7c3;
+
+  border-bottom:none;
+
+  border-radius:100px 100px 0 0;
+}
+
+/* =========================
+TREE
+========================= */
+
+.tree-section{
+  overflow:hidden;
+
+  background:
+  linear-gradient(
+    180deg,
+    #9fe1ff,
+    #eefcff
+  );
+}
+
+.tree-bg{
+  position:absolute;
+  inset:0;
+}
+
+.tree-bg::before,
+.tree-bg::after{
+  content:"";
+
+  position:absolute;
+
+  width:400px;
+  height:140px;
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,.7);
+
+  filter:blur(10px);
+}
+
+.tree-bg::before{
+  top:60px;
+  left:-100px;
+
+  animation:cloudMove 20s linear infinite;
+}
+
+.tree-bg::after{
+  top:150px;
+  right:-120px;
+
+  animation:cloudMove2 25s linear infinite;
+}
+
+.tree-world{
+  position:relative;
+  width:100%;
+  height:100%;
+}
+
+.memory-tree{
+  position:absolute;
+
+  left:50%;
+  bottom:0;
+
+  transform:translateX(-50%);
+
+  height:96vh;
+
+  object-fit:contain;
+}
+
+/* buah */
+
+.fruit{
+  position:absolute;
+
+  width:75px;
+  height:75px;
+
+  border:none;
+  background:none;
+
+  font-size:3rem;
+
+  cursor:pointer;
+
+  z-index:5;
+
+  animation:fruitFloat 2s ease-in-out infinite alternate;
+
+  transition:.3s;
+}
+
+.fruit:hover{
+  transform:scale(1.2);
+
+  filter:
+  drop-shadow(0 0 10px #ff5f7f)
+  drop-shadow(0 0 24px #ff89a8);
+}
+
+/* posisi */
+
+.fruit-1{
+  top:18%;
+  left:42%;
+}
+
+.fruit-2{
+  top:30%;
+  left:34%;
+}
+
+.fruit-3{
+  top:22%;
+  right:35%;
+}
+
+.fruit-4{
+  top:40%;
+  right:30%;
+}
+
+.fruit-5{
+  top:12%;
+  left:51%;
+}
+
+.fruit-6{
+  top:50%;
+  left:48%;
+}
+
+/* =========================
+POPUP
+========================= */
+
+.memory-popup{
+  position:fixed;
+  inset:0;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  z-index:999;
+}
+
+.memory-popup.hidden{
+  display:none;
+}
+
+.memory-popup__overlay{
+  position:absolute;
+  inset:0;
+
+  background:rgba(0,0,0,.5);
+
+  backdrop-filter:blur(8px);
+}
+
+.memory-popup__content{
+  position:relative;
+  z-index:2;
+
+  width:min(92vw,500px);
+
+  padding:24px;
+
+  border-radius:30px;
+
+  background:white;
+
+  color:#444;
+
+  animation:popupShow .4s ease;
+}
+
+.memory-popup__image{
+  width:100%;
+  height:300px;
+
+  object-fit:cover;
+
+  border-radius:20px;
+}
+
+.memory-popup__content h2{
+  margin-top:18px;
+
+  color:#ff4d88;
+
+  font-family:"Marhey",cursive;
+
+  font-size:2rem;
+}
+
+.memory-popup__content p{
+  margin-top:10px;
+
+  line-height:1.8;
+}
+
+.memory-popup__close{
+  position:absolute;
+
+  top:12px;
+  right:12px;
+
+  width:42px;
+  height:42px;
+
+  border:none;
+  border-radius:50%;
+
+  background:#ff5c8f;
+
+  color:white;
+
+  cursor:pointer;
+}
+
+/* =========================
+ANIMATION
+========================= */
+
+@keyframes rainFall{
+  from{
+    transform:translateY(-20vh);
+  }
+
+  to{
+    transform:translateY(130vh);
+  }
+}
+
+@keyframes rotateGlobe{
+  from{
+    transform:rotateY(0deg) rotateX(-8deg);
+  }
+
+  to{
+    transform:rotateY(360deg) rotateX(-8deg);
+  }
+}
+
+@keyframes heartRise{
+  from{
+    transform:translateY(20vh);
+    opacity:0;
+  }
+
+  to{
+    transform:translateY(-120vh);
+    opacity:1;
+  }
+}
+
+@keyframes fruitFloat{
+  from{
+    transform:translateY(0px);
+  }
+
+  to{
+    transform:translateY(-10px);
+  }
+}
+
+@keyframes popupShow{
+  from{
+    opacity:0;
+    transform:scale(.8);
+  }
+
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+@keyframes cloudMove{
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(120vw);
+  }
+}
+
+@keyframes cloudMove2{
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(-120vw);
+  }
+}
+
+/* =========================
+MOBILE
+========================= */
+
+@media(max-width:768px){
+
+  .intro-screen__countdown{
+    font-size:6rem;
+  }
+
+  .montage-track{
+    width:320px;
+    height:320px;
+  }
+
+  .montage-card{
+    width:70px;
+    height:70px;
+  }
+
+  .memory-tree{
+    height:88vh;
+  }
+
+  .fruit{
+    width:60px;
+    height:60px;
+    font-size:2.2rem;
+  }
+
+  .fruit-1{
+    top:22%;
+    left:38%;
+  }
+
+  .fruit-2{
+    top:32%;
+    left:26%;
+  }
+
+  .fruit-3{
+    top:24%;
+    right:24%;
+  }
+
+  .fruit-4{
+    top:42%;
+    right:20%;
+  }
+
+  .fruit-5{
+    top:14%;
+    left:52%;
+  }
+
+  .fruit-6{
+    top:54%;
+    left:46%;
+  }
+
+  .memory-popup__image{
+    height:220px;
+  }
+
+}
+```

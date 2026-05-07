@@ -1,0 +1,804 @@
+const introScreen = document.getElementById("introScreen");
+const rainLayer = document.getElementById("rainLayer");
+const countdownText = document.getElementById("countdownText");
+const beginBtn = document.getElementById("beginBtn");
+const loadingScreen = document.getElementById("loadingScreen");
+const loadingFill = document.getElementById("loadingFill");
+const loadingLabel = document.getElementById("loadingLabel");
+const loadingTitle = document.getElementById("loadingTitle");
+const montageSection = document.getElementById("montageSection");
+const montageTrack = document.getElementById("montageTrack");
+const montageRain = document.getElementById("montageRain");
+const gameSection = document.getElementById("gameSection");
+const heartsContainer = document.getElementById("heartsContainer");
+const arrowLayer = document.getElementById("arrowLayer");
+const memoryNodes = document.querySelectorAll(".memory-node");
+const memoryCount = document.getElementById("memoryCount");
+const memoryCard = document.getElementById("memoryCard");
+const memoryParticles = document.getElementById("memoryParticles");
+const memoryBadge = document.getElementById("memoryBadge");
+const memoryImage = document.getElementById("memoryImage");
+const memoryTitle = document.getElementById("memoryTitle");
+const memorySubtitle = document.getElementById("memorySubtitle");
+const memoryText = document.getElementById("memoryText");
+const memorySpeaker = document.getElementById("memorySpeaker");
+const memoryChapter = document.getElementById("memoryChapter");
+const memoryMood = document.getElementById("memoryMood");
+const memoryTag = document.getElementById("memoryTag");
+const music = document.getElementById("bgMusic");
+const closeBook = document.getElementById("closeBook");
+const finalMessage = document.getElementById("finalMessage");
+const scoreText = document.getElementById("score");
+
+const GAME_TARGET = 10;
+const HEART_SPAWN_MS = 1400;
+const HEART_LIFETIME_MS = 9800;
+const MONTAGE_DURATION_MS = 5200;
+
+let score = 0;
+let gameIntervalId = null;
+let gameFinished = false;
+let journeyStarted = false;
+let typingTimer = null;
+let openedMemories = new Set();
+
+const montageMedia = [
+  ...Array.from(
+    { length: 57 },
+    (_, index) =>
+      `assets/images/memory-photo-${String(index + 1).padStart(2, "0")}.jpeg`,
+  ),
+  ...Array.from(
+    { length: 6 },
+    (_, index) =>
+      `assets/images/memory-video-${String(index + 1).padStart(2, "0")}.mp4`,
+  ),
+];
+
+const memories = [
+  {
+    badge: "memory 01",
+    image: "assets/images/memory-photo-01.jpeg",
+    title: "Kalau Hari Itu Diulang",
+    subtitle: "soft sky, quiet heart",
+    text: "Kamu bikin hari biasa terasa lebih indah.",
+    speaker: "Narrator",
+    chapter: "Episode 01",
+    mood: "dreamy",
+    tag: "first glow",
+  },
+  {
+    badge: "memory 02",
+    image: "assets/images/memory-photo-08.jpeg",
+    title: "Senyum Yang Datang Pelan",
+    subtitle: "warm light, shy eyes",
+    text: "Senyum kamu datang pelan, tapi tinggal lama.",
+    speaker: "Heart Note",
+    chapter: "Episode 02",
+    mood: "gentle",
+    tag: "soft smile",
+  },
+  {
+    badge: "memory 03",
+    image: "assets/images/memory-photo-16.jpeg",
+    title: "Obrolan Yang Tidak Berat",
+    subtitle: "rain song, little spark",
+    text: "Obrolan sederhana itu ternyata jadi kenangan manis.",
+    speaker: "Moon Diary",
+    chapter: "Episode 03",
+    mood: "warm",
+    tag: "little talk",
+  },
+  {
+    badge: "memory 04",
+    image: "assets/images/memory-photo-24.jpeg",
+    title: "Tatapan Yang Lama Tinggal",
+    subtitle: "moon dust, anime night",
+    text: "Ada tatapan singkat yang susah pergi dari kepala.",
+    speaker: "Night Scene",
+    chapter: "Episode 04",
+    mood: "cinematic",
+    tag: "moon scene",
+  },
+  {
+    badge: "memory 05",
+    image: "assets/images/memory-photo-33.jpeg",
+    title: "Versi Dunia Yang Lebih Lembut",
+    subtitle: "petals, soft steps",
+    text: "Sejak ada kamu, dunia terasa lebih lembut.",
+    speaker: "Dream Route",
+    chapter: "Episode 05",
+    mood: "tender",
+    tag: "warm world",
+  },
+  {
+    badge: "memory 06",
+    image: "assets/images/memory-photo-41.jpeg",
+    title: "Kenangan Yang Tidak Ingin Hilang",
+    subtitle: "last glow, forever note",
+    text: "Kalau jadi kenangan, semoga ini tetap jadi yang paling cantik.",
+    speaker: "Final Note",
+    chapter: "Episode 06",
+    mood: "forever",
+    tag: "last note",
+  },
+];
+
+function wait(ms) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
+}
+
+function createRain() {
+  const fragment = document.createDocumentFragment();
+
+  for (let index = 0; index < 80; index += 1) {
+    const drop = document.createElement("span");
+    drop.className = "rain-drop";
+    drop.style.left = `${Math.random() * 100}%`;
+    drop.style.animationDuration = `${Math.random() * 0.8 + 0.8}s`;
+    drop.style.animationDelay = `${Math.random() * -1.2}s`;
+    drop.style.opacity = `${Math.random() * 0.35 + 0.2}`;
+    fragment.appendChild(drop);
+  }
+
+  rainLayer.appendChild(fragment);
+}
+
+function createMontageRain() {
+  const fragment = document.createDocumentFragment();
+
+  for (let index = 0; index < 55; index += 1) {
+    const drop = document.createElement("span");
+    drop.className = "montage-rain-drop";
+    drop.style.left = `${Math.random() * 100}%`;
+    drop.style.animationDuration = `${Math.random() * 0.9 + 0.9}s`;
+    drop.style.animationDelay = `${Math.random() * -1.4}s`;
+    drop.style.opacity = `${Math.random() * 0.22 + 0.15}`;
+    fragment.appendChild(drop);
+  }
+
+  montageRain.appendChild(fragment);
+}
+
+function createMontageMediaElement(mediaPath, index) {
+  if (mediaPath.endsWith(".mp4")) {
+    const video = document.createElement("video");
+    video.src = mediaPath;
+    video.autoplay = true;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    return video;
+  }
+
+  const image = document.createElement("img");
+  image.src = mediaPath;
+  image.alt = `Montage media ${index + 1}`;
+  return image;
+}
+
+function buildMontageScene() {
+  montageMedia.forEach((mediaPath, index) => {
+    const card = document.createElement("figure");
+    card.className = "montage-card";
+    card.appendChild(createMontageMediaElement(mediaPath, index));
+    montageTrack.appendChild(card);
+  });
+
+  positionMontageCards();
+}
+
+function positionMontageCards() {
+  const cards = montageTrack.querySelectorAll(".montage-card");
+  const total = cards.length;
+  const radius = window.innerWidth <= 768 ? 150 : 280;
+
+  cards.forEach((card, index) => {
+    const phi = Math.acos(-1 + (2 * index) / total);
+    const theta = Math.sqrt(total * Math.PI) * phi;
+    const x = radius * Math.cos(theta) * Math.sin(phi);
+    const y = radius * Math.sin(theta) * Math.sin(phi);
+    const z = radius * Math.cos(phi);
+
+    card.style.left = "50%";
+    card.style.top = "50%";
+    card.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${y}px, ${z}px)`;
+  });
+}
+
+function startMusic() {
+  music.volume = 0.55;
+  music.currentTime = music.currentTime || 0;
+  music.play().catch(() => {
+    beginBtn.classList.remove("hidden");
+  });
+}
+
+function typeText(element, text) {
+  if (!element) {
+    return;
+  }
+
+  const fullText = text || element.dataset.text || element.textContent.trim();
+  window.clearInterval(typingTimer);
+  element.textContent = "";
+
+  let index = 0;
+  typingTimer = window.setInterval(() => {
+    element.textContent += fullText.charAt(index);
+    index += 1;
+
+    if (index >= fullText.length) {
+      window.clearInterval(typingTimer);
+    }
+  }, 18);
+}
+
+function burstMemoryParticles() {
+  const rect = memoryCard.getBoundingClientRect();
+
+  for (let index = 0; index < 12; index += 1) {
+    const particle = document.createElement("span");
+    particle.className = "memory-particle";
+    particle.style.left = `${rect.left + rect.width / 2}px`;
+    particle.style.top = `${rect.top + rect.height / 3}px`;
+    particle.style.setProperty("--move-x", `${Math.random() * 180 - 90}px`);
+    particle.style.setProperty("--move-y", `${Math.random() * -130 - 40}px`);
+    memoryParticles.appendChild(particle);
+
+    window.setTimeout(() => {
+      particle.remove();
+    }, 1300);
+  }
+}
+
+async function runLoadingSequence(title, label, duration = 1800) {
+  loadingTitle.textContent = title;
+  loadingLabel.textContent = label;
+  loadingFill.style.width = "0%";
+  loadingScreen.classList.remove("hidden");
+
+  const startedAt = Date.now();
+
+  while (true) {
+    const elapsed = Date.now() - startedAt;
+    const progress = Math.min(100, Math.round((elapsed / duration) * 100));
+    loadingFill.style.width = `${progress}%`;
+
+    if (progress >= 100) {
+      break;
+    }
+
+    await wait(18);
+  }
+
+  await wait(250);
+  loadingScreen.classList.add("hidden");
+}
+
+function getArrowStartPoint() {
+  return {
+    x: window.innerWidth / 2 - 10,
+    y: window.innerHeight - 108,
+  };
+}
+
+function stickArrowOnHeart(heart) {
+  if (!heart.isConnected) {
+    return;
+  }
+
+  const impact = document.createElement("span");
+  impact.className = "heart__impact";
+
+  const feather = document.createElement("span");
+  feather.className = "heart__feather";
+  impact.appendChild(feather);
+
+  heart.appendChild(impact);
+  heart.classList.add("is-hit");
+
+  window.setTimeout(() => {
+    heart.remove();
+  }, 2100);
+}
+
+function launchArrow(targetHeart) {
+  const start = getArrowStartPoint();
+  const targetRect = targetHeart.getBoundingClientRect();
+  const end = {
+    x: targetRect.left + targetRect.width / 2,
+    y: targetRect.top + targetRect.height / 2,
+  };
+
+  const deltaX = end.x - start.x;
+  const deltaY = end.y - start.y;
+  const distance = Math.hypot(deltaX, deltaY);
+  const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+  const arrow = document.createElement("div");
+  arrow.className = "arrow-shot";
+  arrow.style.left = `${start.x}px`;
+  arrow.style.top = `${start.y}px`;
+  arrow.style.width = `${distance}px`;
+  arrow.style.transform = `rotate(${angle}deg) scaleX(0.18)`;
+  arrow.style.opacity = "0";
+
+  const arrowFeather = document.createElement("span");
+  arrowFeather.className = "arrow-shot__feather";
+  arrow.appendChild(arrowFeather);
+  arrowLayer.appendChild(arrow);
+
+  requestAnimationFrame(() => {
+    arrow.style.transition =
+      "transform 420ms cubic-bezier(0.2, 0.7, 0.22, 1), opacity 140ms ease";
+    arrow.style.transform = `rotate(${angle}deg) scaleX(1)`;
+    arrow.style.opacity = "1";
+  });
+
+  window.setTimeout(() => {
+    arrow.style.transition = "opacity 180ms ease";
+    arrow.style.opacity = "0";
+    stickArrowOnHeart(targetHeart);
+  }, 430);
+
+  window.setTimeout(() => {
+    arrow.remove();
+  }, 640);
+}
+
+function updateScore() {
+  scoreText.textContent = String(score);
+
+  if (score >= GAME_TARGET && !gameFinished) {
+    gameWin();
+  }
+}
+
+function handleHeartHit(heart) {
+  if (gameFinished || heart.dataset.hit === "true") {
+    return;
+  }
+
+  heart.dataset.hit = "true";
+  heart.disabled = true;
+  score += 1;
+  updateScore();
+  launchArrow(heart);
+}
+
+function createHeart() {
+  if (gameFinished) {
+    return;
+  }
+
+  const heart = document.createElement("button");
+  heart.type = "button";
+  heart.className = "heart";
+  heart.style.left = `${Math.random() * 82 + 6}vw`;
+  heart.style.bottom = `${Math.random() * 14 - 12}vh`;
+  heart.style.animationDuration = `${Math.random() * 2 + 6.4}s`;
+  heart.style.setProperty("--heart-scale", `${Math.random() * 0.22 + 0.94}`);
+  heart.setAttribute("aria-label", "Heart target");
+
+  const heartLabel = document.createElement("span");
+  heartLabel.className = "heart__label";
+  heartLabel.textContent = "❤";
+  heart.appendChild(heartLabel);
+
+  heart.addEventListener(
+    "click",
+    () => {
+      handleHeartHit(heart);
+    },
+    { once: true },
+  );
+
+  heartsContainer.appendChild(heart);
+
+  window.setTimeout(() => {
+    if (heart.dataset.hit !== "true") {
+      heart.remove();
+    }
+  }, HEART_LIFETIME_MS);
+}
+
+function startGame() {
+  score = 0;
+  gameFinished = false;
+  heartsContainer.innerHTML = "";
+  arrowLayer.innerHTML = "";
+  updateScore();
+
+  createHeart();
+  gameIntervalId = window.setInterval(createHeart, HEART_SPAWN_MS);
+}
+
+async function gameWin() {
+  gameFinished = true;
+
+  if (gameIntervalId) {
+    window.clearInterval(gameIntervalId);
+    gameIntervalId = null;
+  }
+
+  heartsContainer.innerHTML = "";
+  arrowLayer.innerHTML = "";
+
+  gameSection.classList.add("hidden");
+
+  montageSection.classList.add("hidden");
+
+  await wait(MONTAGE_DURATION_MS);
+
+  montageSection.classList.add("hidden");
+
+  await runLoadingSequence(
+    "Membuka Kenangan Terindah",
+    "anime memories and soft light",
+    1900,
+  );
+  calculatorSection.classList.remove("hidden");
+}
+
+function setupMemoryScene() {
+  memoryNodes.forEach((node) => {
+    node.addEventListener("click", () => {
+      revealMemory(Number(node.dataset.memory));
+    });
+  });
+}
+
+async function startJourney() {
+  if (journeyStarted) {
+    return;
+  }
+
+  journeyStarted = true;
+  introScreen.classList.add("hidden");
+  startMusic();
+  await runLoadingSequence("Loading Love Story", "after the rain", 1900);
+  gameSection.classList.remove("hidden");
+  startGame();
+}
+
+async function runCountdown() {
+  startMusic();
+  const numbers = ["5", "4", "3", "2", "1"];
+
+  for (const number of numbers) {
+    countdownText.textContent = number;
+    await wait(900);
+  }
+
+  countdownText.textContent = "go";
+  await wait(700);
+  beginBtn.classList.remove("hidden");
+  startJourney();
+}
+
+beginBtn.addEventListener("click", () => {
+  startJourney();
+});
+
+window.addEventListener("pointerdown", startMusic, { once: true });
+window.addEventListener("resize", positionMontageCards);
+
+createRain();
+createMontageRain();
+buildMontageScene();
+setupMemoryScene();
+runCountdown();
+
+const dreamWorld = document.getElementById("dreamWorld");
+
+let playerX = 180;
+let playerY = 280;
+
+const speed = 12;
+const keys = {};
+
+document.addEventListener("keydown", (e) => {
+  keys[e.key.toLowerCase()] = true;
+});
+
+document.addEventListener("keyup", (e) => {
+  keys[e.key.toLowerCase()] = false;
+});
+
+function movePlayer() {
+  if (!dreamWorld) {
+    return;
+  }
+
+  if (keys["w"]) playerY -= speed;
+  if (keys["s"]) playerY += speed;
+  if (keys["a"]) playerX -= speed;
+  if (keys["d"]) playerX += speed;
+
+  const bounds = dreamWorld.getBoundingClientRect();
+  const size = player.offsetWidth || 58;
+  const maxX = Math.max(0, bounds.width - size);
+  const maxY = Math.max(0, bounds.height - size);
+
+  playerX = Math.max(0, Math.min(playerX, maxX));
+  playerY = Math.max(0, Math.min(playerY, maxY));
+
+  player.style.left = `${playerX}px`;
+  player.style.top = `${playerY}px`;
+
+  requestAnimationFrame(movePlayer);
+}
+
+movePlayer();
+
+const orbs = document.querySelectorAll(".memory-orb");
+
+orbs.forEach((orb) => {
+  orb.addEventListener("click", () => {
+    const memoryIndex = Number(orb.dataset.memory);
+    orb.classList.add("opened");
+    orb.style.opacity = "0.24";
+    orb.style.transform = "scale(1.22)";
+    revealMemory(memoryIndex);
+  });
+});
+
+const calculatorSection = document.getElementById("calculatorSection");
+
+const calculatorScreen = document.getElementById("calculatorScreen");
+
+const calcButtons = document.querySelectorAll(".calc-btn");
+
+const memoryPopup = document.getElementById("memoryPopup");
+
+const popupImage = document.getElementById("popupImage");
+
+const popupTitle = document.getElementById("popupTitle");
+
+const popupText = document.getElementById("popupText");
+
+const closePopup = document.getElementById("closePopup");
+
+let currentNumber = "";
+
+const calculatorMemories = {
+  1: {
+    image: "assets/images/memory-photo-19.jpeg",
+    title: "Tentang Dua Orang Yang Tidak Sengaja Dipertemukan 🌙",
+    text: "Kadang aku masih suka mikir, gimana caranya semesta bisa mempertemukan dua orang asing sampai akhirnya jadi sedekat ini. Dari yang awalnya cuma saling tau, sampai akhirnya jadi seseorang yang selalu ada di setiap cerita. Foto ini mungkin cuma gambar biasa buat orang lain, tapi buat aku ini adalah bukti kalau pernah ada masa dimana aku benar-benar sebahagia itu bersama kamu. Dan jujur aja, sampai sekarang rasanya masih hangat kalau diingat.",
+  },
+
+  2: {
+    image: "assets/images/memory-photo-30.jpeg",
+    title: "Rumah Yang Datang Dalam Bentuk Seseorang ✨",
+    text: "Aku dulu gak pernah ngerti kenapa orang bilang 'rumah bukan cuma tentang tempat'. Sampai akhirnya aku kenal kamu. Sejak itu aku sadar, ternyata rasa nyaman bisa hadir dari seseorang. Dari cara kamu ngobrol, cara kamu senyum, sampai cara kamu bikin aku lupa sama capeknya dunia. Foto ini selalu bikin aku inget kalau pernah ada seseorang yang bikin hati aku tenang cuma dengan hadirnya dia.",
+  },
+
+  3: {
+    image: "assets/images/memory-photo-34.jpeg",
+    title: "Pantulan Kecil Dari Cerita Besar Kita 🤍",
+    text: "Lucu ya, sebuah cermin bisa nyimpen cerita sebanyak ini. Setiap kali liat foto ini aku selalu inget suasana malam itu, obrolan kecil kita, candaan random, dan cara kita ketawa tanpa mikirin apa-apa. Mungkin buat orang lain ini cuma foto biasa. Tapi buat aku, ini salah satu potongan kenangan yang gak bakal gampang hilang. Karena ternyata hal sederhana pun bisa jadi sangat berarti kalau dilakukan sama orang yang tepat.",
+  },
+
+  4: {
+    image: "assets/images/memory-photo-40.jpeg",
+    title: "Tentang Tumbuh dan Bertahan Bersama 🌿",
+    text: "Aku tau kita gak sempurna. Kita sama-sama punya banyak kurangnya. Tapi yang aku suka dari kita adalah bagaimana kita tetap berusaha saling ada meskipun keadaan gak selalu mudah. Foto ini ngingetin aku kalau pernah ada masa dimana kita belajar tumbuh bersama, belajar sabar, belajar ngerti satu sama lain, dan belajar bertahan walaupun dunia kadang gak berpihak.",
+  },
+
+  5: {
+    image: "assets/images/memory-photo-43.jpeg",
+    title: "Langit Cerah dan Senyum Yang Tidak Akan Aku Lupa ☁️",
+    text: "Mungkin suatu hari nanti aku bakal lupa tanggalnya, lupa jamnya, bahkan lupa hal-hal kecil lainnya. Tapi aku yakin aku gak akan lupa gimana perasaan aku waktu foto ini diambil. Rasanya ringan, tenang, dan hangat banget. Kayak dunia tiba-tiba baik sama aku cuma karena ada kamu di sampingku. Kadang kenangan paling indah memang datang dari momen yang sederhana.",
+  },
+
+  6: {
+    image: "assets/images/memory-photo-50.jpeg",
+    title: "Bangga Pernah Mengenal Kamu 🎓",
+    text: "Kalau suatu saat nanti kamu ngerasa gak cukup baik buat dunia, aku harap kamu inget satu hal kecil ini. Pernah ada seseorang yang sesbangga itu pernah kenal kamu. Seseorang yang selalu seneng liat kamu bahagia, liat kamu berkembang, dan liat kamu berhasil melewati semuanya. Dan orang itu adalah aku. Foto ini bukan cuma tentang hari spesial, tapi tentang rasa bangga karena pernah ada di perjalanan hidup kamu.",
+  },
+
+  7: {
+    image: "assets/images/memory-photo-52.jpeg",
+    title: "Laut, Ombak, dan Tentang Kita 🌊",
+    text: "Aku suka laut karena laut selalu punya cara buat bikin semuanya terasa tenang. Dan anehnya, perasaan itu juga aku rasain waktu sama kamu. Foto ini selalu bikin aku inget kalau pernah ada masa dimana kita berdiri berdampingan sambil liat ombak datang dan pergi, tanpa sadar kalau suatu hari nanti momen itu bakal jadi sesuatu yang sangat dirindukan.",
+  },
+
+  8: {
+    image: "assets/images/memory-photo-08.jpeg",
+    title: "Senja Selalu Tau Cara Menyimpan Rindu 🌅",
+    text: "Katanya senja itu indah karena dia ngajarin kita tentang perpisahan yang pelan-pelan. Dan mungkin itu benar. Karena setiap kali aku liat foto ini, ada rasa hangat sekaligus sesak yang muncul bersamaan. Hangat karena pernah punya kenangan seindah ini. Dan sesak karena sadar kalau waktu terus berjalan, sementara beberapa momen cuma bisa tinggal jadi kenangan.",
+  },
+
+  9: {
+    image: "assets/images/memory-photo-09.jpeg",
+    title: "Kalau Suatu Hari Nanti Kita Hanya Jadi Kenangan 🥺",
+    text: "Kalau suatu hari nanti dunia bikin kita berjalan ke arah yang berbeda, aku cuma pengen kamu tau satu hal. Aku gak pernah nyesel pernah kenal kamu. Karena dari semua hal yang pernah datang di hidup aku, kamu adalah salah satu alasan terbesar kenapa aku pernah merasa benar-benar bahagia. Dan kalau nanti kita cuma tinggal cerita, semoga foto-foto ini tetap bisa jadi pengingat kecil kalau dulu pernah ada dua orang yang saling menyayangi sedalam itu.",
+  },
+};
+
+calcButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const value = btn.textContent;
+
+    if (value === "C") {
+      currentNumber = "";
+      calculatorScreen.textContent = "0";
+      return;
+    }
+
+    if (value === "♡") {
+      currentNumber = "";
+      calculatorScreen.textContent = "♡";
+      return;
+    }
+
+    currentNumber = value;
+    calculatorScreen.textContent = currentNumber;
+
+    if (calculatorMemories[currentNumber]) {
+      const data = calculatorMemories[currentNumber];
+
+      popupImage.src = data.image;
+      popupTitle.textContent = data.title;
+      popupText.textContent = data.text;
+
+      memoryPopup.classList.remove("hidden");
+      createCuteEmoji(btn);
+    }
+  });
+});
+
+closePopup.addEventListener("click", () => {
+  memoryPopup.classList.add("hidden");
+});
+
+const clickSound = document.getElementById("clickSound");
+clickSound.currentTime = 0;
+clickSound.play();
+
+const starCanvas = document.getElementById("starCanvas");
+
+const starCtx = starCanvas.getContext("2d");
+
+let stars = [];
+
+let mouse = {
+  x: window.innerWidth / 2,
+  y: window.innerHeight / 2,
+};
+
+function resizeCanvas() {
+  starCanvas.width = window.innerWidth;
+
+  starCanvas.height = window.innerHeight;
+}
+
+resizeCanvas();
+
+window.addEventListener("resize", resizeCanvas);
+
+window.addEventListener("mousemove", (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+
+class Star {
+  constructor() {
+    this.reset();
+  }
+
+  reset() {
+    this.x = Math.random() * starCanvas.width;
+
+    this.y = Math.random() * starCanvas.height;
+
+    this.size = Math.random() * 2.2 + 0.5;
+
+    this.speed = Math.random() * 0.3 + 0.08;
+
+    this.alpha = Math.random() * 0.8 + 0.2;
+  }
+
+  update() {
+    const dx = mouse.x - this.x;
+
+    const dy = mouse.y - this.y;
+
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < 180) {
+      this.x -= dx * 0.002;
+      this.y -= dy * 0.002;
+    }
+
+    this.y += this.speed;
+
+    if (this.y > starCanvas.height) {
+      this.y = -10;
+
+      this.x = Math.random() * starCanvas.width;
+    }
+  }
+
+  draw() {
+    starCtx.beginPath();
+
+    starCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+
+    starCtx.fillStyle = `rgba(255,255,255,${this.alpha})`;
+
+    starCtx.shadowBlur = 14;
+
+    starCtx.shadowColor = "rgba(255,255,255,.8)";
+
+    starCtx.fill();
+  }
+}
+
+for (let i = 0; i < 140; i++) {
+  stars.push(new Star());
+}
+
+function animateStars() {
+  starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+
+  stars.forEach((star) => {
+    star.update();
+    star.draw();
+  });
+
+  requestAnimationFrame(animateStars);
+}
+
+animateStars();
+const cursorGlow = document.getElementById("cursorGlow");
+
+window.addEventListener("mousemove", (e) => {
+  cursorGlow.style.left = e.clientX + "px";
+
+  cursorGlow.style.top = e.clientY + "px";
+});
+
+function createCuteEmoji(sourceElement) {
+  const emojis = ["💖", "✨", "🌸", "🤍", "💫", "🩷", "🌙", "⭐", "💕"];
+
+  const rect = sourceElement.getBoundingClientRect();
+
+  const startX = rect.left + rect.width / 2;
+
+  const startY = rect.top + rect.height / 2;
+
+  for (let i = 0; i < 18; i++) {
+    const emoji = document.createElement("div");
+
+    emoji.className = "floating-emoji";
+
+    emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+
+    const randomX = (Math.random() - 0.5) * 300;
+
+    const randomY = (Math.random() - 0.5) * 260;
+
+    emoji.style.setProperty("--moveX", randomX + "px");
+
+    emoji.style.setProperty("--moveY", randomY + "px");
+
+    emoji.style.left = startX + "px";
+
+    emoji.style.top = startY + "px";
+
+    emoji.style.fontSize = Math.random() * 18 + 20 + "px";
+
+    emoji.style.animationDuration = Math.random() * 1.5 + 2 + "s";
+
+    document.body.appendChild(emoji);
+
+    setTimeout(() => {
+      emoji.remove();
+    }, 3000);
+  }
+}

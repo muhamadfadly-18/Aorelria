@@ -1,0 +1,393 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+  overflow:hidden;
+  background:#000;
+  color:white;
+}
+
+/* =========================
+   WELCOME
+========================= */
+
+/* ===================================
+   BEAUTIFUL BACKGROUND ANIMATION
+=================================== */
+
+.welcome-screen{
+  overflow:hidden;
+}
+
+/* Animated Gradient */
+
+.welcome-screen::before{
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+
+  background:
+    linear-gradient(
+      45deg,
+      rgba(255,182,193,0.3),
+      rgba(173,216,230,0.2),
+      rgba(255,255,255,0.1)
+    );
+
+  animation:bgMove 8s linear infinite;
+  z-index:1;
+}
+
+@keyframes bgMove{
+  0%{
+    transform:translateX(-50px);
+  }
+
+  50%{
+    transform:translateX(50px);
+  }
+
+  100%{
+    transform:translateX(-50px);
+  }
+}
+
+/* =========================
+   STARS
+========================= */
+
+.stars,
+.stars2{
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+}
+
+.stars{
+  background:
+    radial-gradient(white 1px, transparent 1px);
+
+  background-size:50px 50px;
+
+  animation:moveStars 60s linear infinite;
+
+  opacity:0.8;
+}
+
+.stars2{
+  background:
+    radial-gradient(#ffd6f6 1px, transparent 1px);
+
+  background-size:100px 100px;
+
+  animation:moveStars2 90s linear infinite;
+
+  opacity:0.4;
+}
+
+@keyframes moveStars{
+  from{
+    transform:translateY(0);
+  }
+
+  to{
+    transform:translateY(-1000px);
+  }
+}
+
+@keyframes moveStars2{
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(-1000px);
+  }
+}
+
+/* =========================
+   BUBBLES / WATER
+========================= */
+
+.bubbles{
+  position:absolute;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  z-index:1;
+}
+
+.bubbles::before,
+.bubbles::after{
+  content:"";
+  position:absolute;
+  width:200%;
+  height:200%;
+
+  background:
+    radial-gradient(circle, rgba(255,255,255,0.3) 2px, transparent 2px);
+
+  background-size:60px 60px;
+
+  animation:bubbleMove 20s linear infinite;
+}
+
+.bubbles::after{
+  animation-duration:35s;
+  opacity:0.5;
+}
+
+@keyframes bubbleMove{
+  from{
+    transform:translateY(0);
+  }
+
+  to{
+    transform:translateY(-500px);
+  }
+}
+
+/* =========================
+   GLOW EFFECT
+========================= */
+
+.welcome-content{
+  position:relative;
+  z-index:5;
+
+  backdrop-filter:blur(8px);
+
+  padding:50px;
+
+  border-radius:30px;
+
+  background:rgba(255,255,255,0.08);
+
+  border:1px solid rgba(255,255,255,0.2);
+
+  box-shadow:
+    0 0 30px rgba(255,192,203,0.5),
+    0 0 60px rgba(255,182,193,0.3);
+
+  animation:floatBox 4s ease-in-out infinite;
+}
+
+@keyframes floatBox{
+  0%{
+    transform:translateY(0px);
+  }
+
+  50%{
+    transform:translateY(-10px);
+  }
+
+  100%{
+    transform:translateY(0px);
+  }
+}
+
+/* =========================
+   TITLE EFFECT
+========================= */
+
+.welcome-content h1{
+  text-shadow:
+    0 0 10px pink,
+    0 0 20px pink,
+    0 0 40px white;
+
+  animation:glowText 2s ease-in-out infinite alternate;
+}
+
+@keyframes glowText{
+  from{
+    text-shadow:
+      0 0 10px pink,
+      0 0 20px pink;
+  }
+
+  to{
+    text-shadow:
+      0 0 20px white,
+      0 0 40px pink,
+      0 0 60px pink;
+  }
+}
+
+/* =========================
+   BUTTON BEAUTIFUL
+========================= */
+
+.welcome-content button{
+  background:linear-gradient(
+    45deg,
+    #ff5ea8,
+    #ff9bd2
+  );
+
+  color:white;
+
+  box-shadow:
+    0 0 20px rgba(255,105,180,0.6);
+
+  transition:0.4s;
+}
+
+.welcome-content button:hover{
+  transform:scale(1.1);
+
+  box-shadow:
+    0 0 40px rgba(255,105,180,1);
+}
+/* =========================
+   BOOK
+========================= */
+
+.book-section{
+  width:100%;
+  height:100vh;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+}
+
+.book{
+  position:relative;
+  width:400px;
+  height:550px;
+  perspective:2000px;
+}
+
+.page{
+  position:absolute;
+  width:100%;
+  height:100%;
+
+  background:white;
+  color:black;
+
+  border-radius:10px;
+
+  transform-origin:left;
+  transition:transform 1s;
+
+  cursor:pointer;
+
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+
+  overflow:hidden;
+}
+
+.page-content{
+  padding:20px;
+  text-align:center;
+}
+
+.page img{
+  width:100%;
+  height:250px;
+  object-fit:cover;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+
+.page h2{
+  margin-bottom:15px;
+}
+
+.page p{
+  line-height:1.8;
+}
+
+.cover{
+  background:linear-gradient(135deg,#ff758c,#ff7eb3);
+  color:white;
+  z-index:10;
+}
+
+.last-page{
+  background:#fff0f5;
+}
+
+.page.flipped{
+  transform:rotateY(-180deg);
+}
+
+.hidden{
+  display:none;
+}
+
+/* Final Message */
+
+.final-message{
+  position:absolute;
+  text-align:center;
+  animation:fadeIn 2s ease;
+}
+
+.final-message h1{
+  font-size:50px;
+  margin-bottom:20px;
+  color:white;
+}
+
+.final-message p{
+  font-size:24px;
+  color:white;
+}
+
+/* Button */
+
+#closeBook{
+  margin-top:20px;
+  padding:12px 25px;
+  border:none;
+  border-radius:30px;
+  background:#ff4081;
+  color:white;
+  cursor:pointer;
+  font-size:16px;
+}
+
+/* Animation */
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* Responsive */
+
+@media(max-width:500px){
+
+  .book{
+    width:300px;
+    height:450px;
+  }
+
+  .welcome-content h1{
+    font-size:40px;
+  }
+
+  .final-message h1{
+    font-size:35px;
+  }
+}

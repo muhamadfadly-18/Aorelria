@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Petualangan Katak</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --water1:#00b4d8;
+    --water2:#0077b6;
+    --grass:#80ed99;
+    --frog:#38b000;
+    --frog-dark:#2d6a4f;
+    --white:#fff;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Poppins',sans-serif;
+    background:
+    radial-gradient(circle at top,#1b4332,#081c15);
+}
+
+/* ===== STAGE ===== */
+
+#river-stage{
+    width:950px;
+    height:560px;
+    position:relative;
+    overflow:hidden;
+    border-radius:35px;
+    border:8px solid rgba(255,255,255,.3);
+    box-shadow:
+    0 20px 50px rgba(0,0,0,.5),
+    inset 0 0 50px rgba(255,255,255,.1);
+
+    background:
+    linear-gradient(
+        to bottom,
+        #95d5b2 0%,
+        var(--water1) 20%,
+        var(--water2) 50%,
+        var(--water1) 80%,
+        #95d5b2 100%
+    );
+}
+
+/* animasi air */
+
+#river-stage::before{
+    content:"";
+    position:absolute;
+    width:200%;
+    height:200%;
+    background:
+    repeating-radial-gradient(
+        circle,
+        rgba(255,255,255,.06) 0px,
+        rgba(255,255,255,.06) 3px,
+        transparent 4px,
+        transparent 90px
+    );
+    animation:waterMove 12s linear infinite;
+}
+
+@keyframes waterMove{
+    from{
+        transform:translate(-10%,-10%) rotate(0deg);
+    }
+    to{
+        transform:translate(-20%,-20%) rotate(360deg);
+    }
+}
+
+/* ===== STONES ===== */
+
+.stone{
+    width:120px;
+    height:80px;
+    position:absolute;
+    border-radius:50%;
+    cursor:pointer;
+
+    background:
+    radial-gradient(circle at 30% 30%,
+    #f1f1f1,
+    #adb5bd,
+    #6c757d);
+
+    box-shadow:
+    inset -10px -10px 20px rgba(0,0,0,.25),
+    0 10px 20px rgba(0,0,0,.4);
+
+    transition:.4s;
+}
+
+.stone:hover{
+    transform:scale(1.08) translateY(-5px);
+}
+
+.stone::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+}
+
+.stone[data-step="0"]{
+    left:50px;
+    bottom:50px;
+}
+
+.stone[data-step="1"]{
+    left:220px;
+    bottom:210px;
+}
+
+.stone[data-step="2"]{
+    left:410px;
+    bottom:130px;
+}
+
+.stone[data-step="3"]{
+    left:610px;
+    bottom:260px;
+}
+
+.stone[data-step="4"]{
+    left:790px;
+    bottom:140px;
+}
+
+/* ===== FROG ===== */
+
+/* =========================
+   3D CUTE FROG
+========================= */
+
+#frog{
+    width:140px;
+    height:140px;
+    position:absolute;
+    z-index:30;
+
+    transition:
+    left .8s cubic-bezier(.68,-0.6,.32,1.6),
+    top .8s cubic-bezier(.68,-0.6,.32,1.6);
+
+    transform-style:preserve-3d;
+
+    animation:floating 2.5s ease-in-out infinite;
+}
+
+/* FLOAT */
+
+@keyframes floating{
+    0%,100%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-8px);
+    }
+}
+
+/* BODY */
+
+.frog-body{
+    width:100%;
+    height:100%;
+    position:relative;
+
+    background:
+    radial-gradient(circle at 30% 20%,
+    #d9ff87 0%,
+    #8ee84a 25%,
+    #58b437 60%,
+    #2f7a28 100%);
+
+    border-radius:50% 50% 45% 45%;
+
+    border:4px solid #72b847;
+
+    box-shadow:
+    inset -15px -20px 25px rgba(0,0,0,.18),
+    inset 10px 10px 18px rgba(255,255,255,.3),
+    0 18px 25px rgba(0,0,0,.25),
+    0 0 25px rgba(135,255,88,.3);
+
+    transform:translateZ(20px);
+}
+
+/* SHINE */
+
+.frog-body::before{
+    content:"";
+
+    position:absolute;
+
+    width:60px;
+    height:30px;
+
+    background:rgba(255,255,255,.25);
+
+    border-radius:50%;
+
+    top:18px;
+    left:20px;
+
+    transform:rotate(-20deg);
+}
+
+/* BELLY */
+
+.belly{
+    width:85px;
+    height:70px;
+
+    position:absolute;
+
+    left:50%;
+    bottom:12px;
+
+    transform:translateX(-50%);
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle at top,
+    #fffef5,
+    #efe1c6);
+
+    box-shadow:
+    inset -5px -5px 10px rgba(0,0,0,.08);
+}
+
+/* EYES */
+
+.eye{
+    width:48px;
+    height:48px;
+
+    position:absolute;
+
+    top:-20px;
+
+    background:white;
+
+    border-radius:50%;
+
+    border:4px solid #8bc34a;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 6px 10px rgba(0,0,0,.25),
+    inset 0 5px 8px rgba(255,255,255,.7);
+}
+
+.eye.left{
+    left:12px;
+}
+
+.eye.right{
+    right:12px;
+}
+
+.pupil{
+    width:28px;
+    height:28px;
+
+    position:absolute;
+
+    top:8px;
+    left:8px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle at 30% 30%,
+    white 0%,
+    #6b4f2c 20%,
+    #000 70%);
+
+    box-shadow:
+    inset -3px -3px 5px rgba(255,255,255,.15);
+}
+
+/* BLUSH */
+
+.cheek{
+    width:18px;
+    height:18px;
+
+    background:#ffb48a;
+
+    position:absolute;
+
+    border-radius:50%;
+
+    bottom:42px;
+
+    filter:blur(1px);
+
+    opacity:.9;
+}
+
+.cheek.left{
+    left:10px;
+}
+
+.cheek.right{
+    right:10px;
+}
+
+/* MOUTH */
+
+.mouth{
+    width:45px;
+    height:18px;
+
+    border-bottom:5px solid #6d1b1b;
+
+    position:absolute;
+
+    bottom:38px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    border-radius:0 0 50px 50px;
+}
+
+/* FRONT LEGS */
+
+.front-leg{
+    width:20px;
+    height:52px;
+
+    position:absolute;
+
+    bottom:-10px;
+
+    border-radius:20px;
+
+    background:
+    linear-gradient(to bottom,
+    #9cff68,
+    #4d9927);
+
+    box-shadow:
+    inset -3px -3px 6px rgba(0,0,0,.2);
+}
+
+.front-leg.left{
+    left:35px;
+}
+
+.front-leg.right{
+    right:35px;
+}
+
+/* BACK LEGS */
+
+.leg{
+    width:34px;
+    height:70px;
+
+    position:absolute;
+
+    bottom:-28px;
+
+    border-radius:30px;
+
+    background:
+    linear-gradient(to bottom,
+    #9cff68,
+    #3f7e24);
+
+    box-shadow:
+    inset -5px -5px 10px rgba(0,0,0,.2);
+}
+
+.back-leg.left{
+    left:10px;
+    transform:rotate(38deg);
+}
+
+.back-leg.right{
+    right:10px;
+    transform:rotate(-38deg);
+}
+
+/* ARMS */
+
+.arm{
+    width:18px;
+    height:48px;
+
+    position:absolute;
+
+    top:55px;
+
+    border-radius:20px;
+
+    background:
+    linear-gradient(to bottom,
+    #9cff68,
+    #4b8f28);
+
+    z-index:-1;
+}
+
+.arm.left{
+    left:-2px;
+    transform:rotate(30deg);
+}
+
+.arm.right{
+    right:-2px;
+    transform:rotate(-30deg);
+}
+
+/* FINGERS */
+
+.arm::after,
+.leg::after,
+.front-leg::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:-5px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:28px;
+    height:12px;
+
+    background:#ffb48a;
+
+    border-radius:20px;
+}
+
+/* JUMP */
+
+.jump{
+    animation:jump3d .7s ease;
+}
+
+@keyframes jump3d{
+
+    0%{
+        transform:translateY(0px) scale(1);
+    }
+
+    50%{
+        transform:
+        translateY(-55px)
+        scale(1.08)
+        rotateX(10deg);
+    }
+
+    100%{
+        transform:translateY(0px) scale(1);
+    }
+
+}
+
+/* ===== RIPPLE ===== */
+
+.ripple{
+    position:absolute;
+    width:20px;
+    height:20px;
+    border:3px solid rgba(255,255,255,.7);
+    border-radius:50%;
+    animation:rippleAnim .8s linear forwards;
+}
+
+@keyframes rippleAnim{
+    to{
+        transform:scale(6);
+        opacity:0;
+    }
+}
+
+/* ===== MODAL ===== */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    backdrop-filter:blur(6px);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:100;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-content{
+    width:420px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.2);
+    backdrop-filter:blur(20px);
+    border-radius:30px;
+    padding:25px;
+    color:white;
+    text-align:center;
+    transform:scale(.7);
+    opacity:0;
+    transition:.4s;
+    box-shadow:0 20px 50px rgba(0,0,0,.5);
+}
+
+.modal.active .modal-content{
+    transform:scale(1);
+    opacity:1;
+}
+
+.modal-img{
+    width:100%;
+    height:240px;
+    border-radius:20px;
+    object-fit:cover;
+    margin-bottom:20px;
+}
+
+#pop-title{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+#pop-text{
+    font-size:15px;
+    opacity:.9;
+    line-height:1.7;
+}
+
+.btn-next{
+    margin-top:20px;
+    border:none;
+    padding:14px 35px;
+    border-radius:50px;
+    background:linear-gradient(to right,#38b000,#70e000);
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+    font-size:15px;
+    box-shadow:0 10px 20px rgba(0,0,0,.3);
+}
+
+.btn-next:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+/* ===== PROGRESS ===== */
+
+.progress-box{
+    position:absolute;
+    top:20px;
+    left:20px;
+    width:250px;
+    z-index:50;
+}
+
+.progress-text{
+    color:white;
+    margin-bottom:8px;
+}
+
+.progress{
+    width:100%;
+    height:12px;
+    border-radius:20px;
+    background:rgba(255,255,255,.2);
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(to right,#80ed99,#38b000);
+    transition:.5s;
+}
+
+/* ===== MOBILE ===== */
+
+@media(max-width:1000px){
+
+    #river-stage{
+        width:95vw;
+        height:80vh;
+    }
+
+    .stone{
+        transform:scale(.8);
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="river-stage">
+
+    <div class="progress-box">
+        <div class="progress-text">
+            Perjalanan Katak 🐸
+        </div>
+
+        <div class="progress">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- STONES -->
+
+    <div class="stone" data-step="0"></div>
+    <div class="stone" data-step="1"></div>
+    <div class="stone" data-step="2"></div>
+    <div class="stone" data-step="3"></div>
+    <div class="stone" data-step="4"></div>
+
+    <!-- FROG -->
+
+    <!-- FROG -->
+
+<div id="frog">
+
+    <!-- kaki belakang -->
+    <div class="leg back-leg left"></div>
+    <div class="leg back-leg right"></div>
+
+    <!-- tangan -->
+    <div class="arm left"></div>
+    <div class="arm right"></div>
+
+    <!-- badan -->
+    <div class="frog-body">
+
+        <!-- mata -->
+        <div class="eye left">
+            <div class="pupil"></div>
+        </div>
+
+        <div class="eye right">
+            <div class="pupil"></div>
+        </div>
+
+        <!-- pipi -->
+        <div class="cheek left"></div>
+        <div class="cheek right"></div>
+
+        <!-- mulut -->
+        <div class="mouth"></div>
+
+        <!-- perut -->
+        <div class="belly"></div>
+
+    </div>
+
+    <!-- kaki depan -->
+    <div class="front-leg left"></div>
+    <div class="front-leg right"></div>
+
+</div>
+
+</div>
+
+<!-- MODAL -->
+
+<div class="modal" id="popup">
+
+    <div class="modal-content">
+
+        <img id="pop-img" class="modal-img">
+
+        <h2 id="pop-title"></h2>
+
+        <p id="pop-text"></p>
+
+        <button class="btn-next" onclick="closePopup()">
+            Lanjut 🐸
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+const frog = document.getElementById("frog");
+const popup = document.getElementById("popup");
+const stones = document.querySelectorAll(".stone");
+const progressFill = document.getElementById("progressFill");
+
+let currentStep = 0;
+let moving = false;
+
+const content = [
+
+{
+title:"Awal Petualangan",
+text:"Katak kecil memulai perjalanan melintasi sungai indah.",
+img:"https://images.unsplash.com/photo-1590005024862-6b67679a29fb?w=800"
+},
+
+{
+title:"Air Yang Tenang",
+text:"Suara gemericik sungai membuat perjalanan terasa damai.",
+img:"https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=800"
+},
+
+{
+title:"Bunga Bermekaran",
+text:"Katak menemukan bunga-bunga cantik di sekitar sungai.",
+img:"https://images.unsplash.com/photo-1551009175-15bdf9dcb580?w=800"
+},
+
+{
+title:"Hampir Sampai",
+text:"Tinggal satu lompatan lagi menuju tujuan akhir.",
+img:"https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=800"
+},
+
+{
+title:"Berhasil!",
+text:"Katak berhasil melewati semua batu dengan bahagia.",
+img:"https://images.unsplash.com/photo-1591873095034-77114677764d?w=800"
+}
+
+];
+
+function updateProgress(){
+    const percent = (currentStep / 4) * 100;
+    progressFill.style.width = percent + "%";
+}
+
+function rippleEffect(x,y){
+
+    const ripple = document.createElement("div");
+
+    ripple.classList.add("ripple");
+
+    ripple.style.left = x + "px";
+    ripple.style.top = y + "px";
+
+    document.getElementById("river-stage").appendChild(ripple);
+
+    setTimeout(()=>{
+        ripple.remove();
+    },800);
+}
+
+function jumpTo(step){
+
+    if(moving) return;
+
+    moving = true;
+
+    const stone = document.querySelector(`.stone[data-step="${step}"]`);
+
+    const x = stone.offsetLeft + 20;
+    const y = stone.offsetTop - 10;
+
+    rippleEffect(
+        stone.offsetLeft + 50,
+        stone.offsetTop + 40
+    );
+
+    frog.classList.add("jump");
+
+    frog.style.left = x + "px";
+    frog.style.top = y + "px";
+
+    setTimeout(()=>{
+
+        frog.classList.remove("jump");
+
+        openPopup(step);
+
+        currentStep = step;
+
+        updateProgress();
+
+    },700);
+
+}
+
+function openPopup(step){
+
+    document.getElementById("pop-img").src = content[step].img;
+    document.getElementById("pop-title").innerText = content[step].title;
+    document.getElementById("pop-text").innerText = content[step].text;
+
+    popup.classList.add("active");
+
+}
+
+function closePopup(){
+
+    popup.classList.remove("active");
+
+    moving = false;
+
+    if(currentStep === 4){
+
+        setTimeout(()=>{
+
+            alert("🎉 Petualangan selesai!");
+
+            currentStep = 0;
+
+            updateProgress();
+
+            jumpTo(0);
+
+        },400);
+
+    }
+
+}
+
+stones.forEach(stone=>{
+
+    stone.addEventListener("click",()=>{
+
+        const step = parseInt(stone.dataset.step);
+
+        if(step === currentStep + 1 || step === 0){
+
+            jumpTo(step);
+
+        }
+
+    });
+
+});
+
+window.onload = ()=>{
+
+    jumpTo(0);
+
+};
+
+</script>
+
+</body>
+</html>

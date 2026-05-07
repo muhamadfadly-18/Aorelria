@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katak Melompat di Sungai</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Mencegah scrollbar */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: sans-serif;
+        }
+
+        /* Styling untuk Canvas */
+        canvas {
+            border: 2px solid #333;
+            background-color: transparent;
+            cursor: pointer; /* Mengubah kursor jadi tangan saat di atas canvas */
+        }
+
+        /* Styling untuk Pop-up (Modal) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Latar belakang gelap */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0; /* Sembunyikan default */
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .modal-overlay.show {
+            opacity: 1; /* Tampilkan */
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: scale(1); /* Efek zoom in saat muncul */
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: #2e7d32; /* Warna hijau katak */
+        }
+
+        .close-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .close-btn:hover {
+            background-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Elemen Canvas -->
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+
+    <!-- Elemen Pop-up (Modal) -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <h2>Hore! 🐸</h2>
+            <p>Katak berhasil melompat ke batu!</p>
+            <button class="close-btn" id="closeModal">Tutup</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const modal = document.getElementById('modalOverlay');
+        const closeBtn = document.getElementById('closeModal');
+
+        // Posisi dan Ukuran
+        const riverY = 150;
+        const riverHeight = 200;
+        
+        // Data Batu
+        const stone = { x: 550, y: 250, radius: 40 };
+
+        // Data Katak
+        const frog = {
+            startX: 150,
+            startY: 250,
+            x: 150,
+            y: 250,
+            radius: 20,
+            color: '#4CAF50', // Hijau
+            isJumping: false,
+            jumpSpeed: 5
+        };
+
+        // --- Fungsi Menggambar ---
+
+        function drawRiver() {
+            // Air Sungai
+            ctx.fillStyle = '#4FC3F7'; // Biru muda
+            ctx.fillRect(0, riverY, canvas.width, riverHeight);
+            
+            // Garis-garis air sederhana
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                ctx.moveTo(100 + i * 150, riverY + 50 + i * 30);
+                ctx.lineTo(200 + i * 150, riverY + 50 + i * 30);
+                ctx.stroke();
+            }
+        }
+
+        function drawStone() {
+            ctx.beginPath();
+            ctx.arc(stone.x, stone.y, stone.radius, 0, Math.PI * 2);
+            ctx.fillStyle = '#757575'; // Abu-abu
+            ctx.fill();
+            ctx.strokeStyle = '#616161';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        function drawFrog() {
+            ctx.beginPath();
+            ctx.arc(frog.x, frog.y, frog.radius, 0, Math.PI * 2);
+            ctx.fillStyle = frog.color;
+            ctx.fill();
+            
+            // Mata katak sederhana
+            ctx.fillStyle = 'white';
+            ctx.beginPath(); ctx.arc(frog.x - 8, frog.y - 10, 5, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(frog.x + 8, frog.y - 10, 5, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = 'black';
+            ctx.beginPath(); ctx.arc(frog.x - 8, frog.y - 10, 2, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(frog.x + 8, frog.y - 10, 2, 0, Math.PI * 2); ctx.fill();
+        }
+
+        function draw() {
+            // Bersihkan canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            drawRiver();
+            drawStone();
+            drawFrog();
+        }
+
+        // --- Fungsi Animasi Lompat ---
+
+        function animateJump() {
+            if (!frog.isJumping) return;
+
+            // Gerakan parabola sederhana
+            // Bergerak ke kanan
+            if (frog.x < stone.x) {
+                frog.x += frog.jumpSpeed;
+                
+                // Membuat efek melengkung (naik lalu turun)
+                // Tengah lompatan adalah di antara startX dan stone.x
+                const jumpMidPoint = (frog.startX + stone.x) / 2;
+                const jumpHeight = 100; // Seberapa tinggi katak melompat
+
+                // Rumus kuadrat sederhana untuk Y: y = a(x-h)^2 + k
+                // Kita gunakan pendekatan yang lebih mudah: naik sampai tengah, lalu turun.
+                const distanceFromStart = frog.x - frog.startX;
+                const totalDistance = stone.x - frog.startX;
+                const normalizedDistance = distanceFromStart / totalDistance; // 0 sampai 1
+
+                // Y akan berkurang (naik) saatnormalizedDistance < 0.5, lalu bertambah (turun)
+                // Kita gunakan Math.sin untuk kurva yang halus (sin 0 sampai sin PI)
+                const yOffset = Math.sin(normalizedDistance * Math.PI) * jumpHeight;
+                frog.y = frog.startY - yOffset;
+
+                draw();
+                requestAnimationFrame(animateJump);
+            } else {
+                // Selesai melompat
+                frog.isJumping = false;
+                frog.x = stone.x; // Pastikan tepat di tengah batu
+                frog.y = stone.y;
+                draw();
+                
+                // Munculkan Pop-up setelah jeda sedikit
+                setTimeout(showPopup, 200);
+            }
+        }
+
+        // --- Fungsi Pop-up ---
+
+        function showPopup() {
+            modal.classList.add('show');
+        }
+
+        function closePopup() {
+            modal.classList.remove('show');
+            // Kembalikan katak ke posisi awal agar bisa diklik lagi
+            frog.x = frog.startX;
+            frog.y = frog.startY;
+            draw();
+        }
+
+        // --- Deteksi Klik ---
+
+        canvas.addEventListener('click', (event) => {
+            // Hitung posisi klik relatif terhadap canvas
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+
+            // Cek apakah klik berada di dalam lingkaran katak
+            const dx = mouseX - frog.x;
+            const dy = mouseY - frog.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Jika diklik dan sedang tidak melompat
+            if (distance < frog.radius && !frog.isJumping) {
+                frog.isJumping = true;
+                animateJump();
+            }
+        });
+
+        closeBtn.addEventListener('click', closePopup);
+        // Tutup juga jika klik di luar kotak putih
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closePopup();
+            }
+        });
+
+        // Gambar pertama kali
+        draw();
+
+    </script>
+</body>
+</html>
