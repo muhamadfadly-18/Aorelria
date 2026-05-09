@@ -498,11 +498,7 @@ async function runCountdown() {
   startJourney();
 }
 
-// beginBtn.addEventListener("click", () => {
-//   startJourney();
-// });
 
-window.addEventListener("pointerdown", startMusic, { once: true });
 window.addEventListener("resize", positionMontageCards);
 
 createRain();
