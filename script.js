@@ -209,35 +209,11 @@ function positionMontageCards() {
 }
 
 function startMusic() {
-  if (!music) return;
-
-  music.volume = 0;
-
-  const playPromise = music.play();
-
-  if (playPromise !== undefined) {
-    playPromise
-      .then(() => {
-        setTimeout(() => {
-          music.muted = false;
-
-          let volume = 0;
-          const fade = setInterval(() => {
-            volume += 0.02;
-
-            if (volume >= 1) {
-              volume = 1;
-              clearInterval(fade);
-            }
-
-            music.volume = volume;
-          }, 120);
-        }, 300);
-      })
-      .catch((err) => {
-        console.log("Autoplay gagal:", err);
-      });
-  }
+  music.volume = 1;
+  music.currentTime = music.currentTime || 0;
+  music.play().catch(() => {
+    // beginBtn.classList.remove("hidden");
+  });
 }
 
 function typeText(element, text) {
@@ -484,7 +460,7 @@ async function startJourney() {
 }
 
 async function runCountdown() {
-  startMusic();
+ 
   const numbers = ["5", "4", "3", "2", "1"];
 
   for (const number of numbers) {
@@ -498,6 +474,10 @@ async function runCountdown() {
   startJourney();
 }
 
+// beginBtn.addEventListener("click", () => {
+//   startJourney();
+// });
+
 
 window.addEventListener("resize", positionMontageCards);
 
@@ -505,7 +485,17 @@ createRain();
 createMontageRain();
 buildMontageScene();
 setupMemoryScene();
-runCountdown();
+
+function initExperience() {
+  startMusic();
+  runCountdown();
+
+  window.removeEventListener("touchstart", initExperience);
+  window.removeEventListener("click", initExperience);
+}
+
+window.addEventListener("touchstart", initExperience, { once: true });
+window.addEventListener("click", initExperience, { once: true });
 
 const dreamWorld = document.getElementById("dreamWorld");
 
@@ -995,6 +985,3 @@ function createLoveFireworks() {
     }, 1200);
   }
 }
-window.addEventListener("load", () => {
-  startMusic();
-});
