@@ -12,16 +12,11 @@
     />
     <link rel="stylesheet" href="style.css" />
   </head>
- <video
-  id="bgMusic"
-  autoplay
-  loop
-  muted
-  playsinline
-  style="display: none"
->
-  <source src="assets/music/Kiss the Rain.mp3" type="audio/mp4" />
-</video> 
+  <body>
+    <audio id="bgMusic" loop autoplay preload="auto">
+      <source src="assets/music/Kiss the Rain.mp3" type="audio/mp3" />
+    </audio>
+
     <section class="intro-screen" id="introScreen">
       <div class="intro-screen__rain" aria-hidden="true" id="rainLayer"></div>
       <div class="intro-screen__mist"></div>
